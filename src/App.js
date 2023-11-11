@@ -9,6 +9,7 @@ import MenuReact from './components/menu/MenuReact';
 import TermsAndConditionsPage from './components/terms/terms';
 import TranslucentMenu from './components/translucentMenu/translucentManu.js'
 import LoginPage from './components/loginPage/LoginPage';
+import RegisterPage from './components/registerPage/RegisterPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/youtube" element={<YoutubePage />} />
           <Route path="/terms" element={<TermsAndConditionsPage />} />
           <Route path="/LogIn" element={<LoginPage/>} />
+          <Route path="/SignUp" element={<RegisterPage/>} />
           {/* Otras rutas aquí */}
         </Routes>
       </div>

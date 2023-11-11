@@ -67,7 +67,7 @@ export const LoginForm = () => {
       onSubmit={handleLoginSubmit}
       validateOnBlur={false}
     >
-      <Form>
+      <Form className="form">
         <div className="form-group">
           <label htmlFor="loginEmail" className="titles"></label>
           <Field
