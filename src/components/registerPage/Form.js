@@ -1,6 +1,6 @@
 // Importaciones
 import React from "react";
-import { Button, Input } from "antd";
+import { Button, Input, Select } from "antd";
 import { UserOutlined, EyeTwoTone, EyeInvisibleOutlined, MailOutlined, SolutionOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -8,8 +8,8 @@ import * as Yup from "yup";
 import './Form.scss';
 
 
-export const RegistrationForm = () => {
-
+export const RegistrationForm = (props) => {
+    const { Option } = Select;
     const handleRegistrationSubmit = (values) => {
         console.log(values);
     };
@@ -18,8 +18,8 @@ export const RegistrationForm = () => {
     const validationSchema = Yup.object().shape({
         Name: Yup.string().required("El nombre es requerido"),
         lastname: Yup.string().required("El apellido es requerido"),
-        documentType: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
-        document: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
+        documentType: Yup.string().oneOf(["CC", "TI", "Pasaporte", "Cédula de extranjería"]).required("El tipo de documento es requerido"),
+        document: Yup.string().required("El documento es necesario"),
         country: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
         department: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
         municipality: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
@@ -40,7 +40,6 @@ export const RegistrationForm = () => {
                 <div className="form-container">
                     <div className="column1">
                         <div className="form-group">
-                            <label htmlFor="Name" className="titles"></label>
                             <Field
                                 id="Name"
                                 name="Name"
@@ -56,7 +55,6 @@ export const RegistrationForm = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label htmlFor="email" className="titles"></label>
                             <Field
                                 id="email"
                                 name="email"
@@ -72,7 +70,6 @@ export const RegistrationForm = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label htmlFor="document" className="titles"></label>
                             <Field
                                 id="document"
                                 name="document"
@@ -88,7 +85,6 @@ export const RegistrationForm = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label htmlFor="department" className="titles"></label>
                             <Field
                                 id="department"
                                 name="department"
@@ -103,7 +99,6 @@ export const RegistrationForm = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label htmlFor="statelocalitation" className="titles"></label>
                             <Field
                                 id="statelocalitation"
                                 name="statelocalitation"
@@ -117,10 +112,8 @@ export const RegistrationForm = () => {
                             />
                         </div>
                     </div>
-
                     <div className="column2">
                         <div className="form-group">
-                            <label htmlFor="lastname" className="titles"></label>
                             <Field
                                 id="lastname"
                                 name="lastname"
@@ -136,25 +129,35 @@ export const RegistrationForm = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label htmlFor="documentType" className="titles"></label>
                             <Field
                                 id="documentType"
                                 name="documentType"
-                                as={Input}
-                                placeholder="Tipo de documento"
-                                className="inputs"
-                            />
+                            >
+                                {({ field, form }) => (
+                                    <Select
+                                        className="inputs"
+                                        value={field.value} 
+                                        onChange={(value) => form.setFieldValue("documentType", value)}
+                                        onBlur={() => form.setFieldTouched("documentType", true)}
+                                    >
+                                        <Option value="CC">CC</Option>
+                                        <Option value="TI">TI</Option>
+                                        <Option value="Pasaporte">Pasaporte</Option>
+                                        <Option value="Cédula de extranjería">Cédula de extranjería</Option>
+                                    </Select>
+                                )}
+                            </Field>
                             <ErrorMessage
                                 name="documentType"
                                 render={(msg) => <div className="error-message">{msg}</div>}
                             />
                         </div>
+
                         <br />
                         <div className="form-group">
-                            <label htmlFor="county" className="titles"></label>
                             <Field
-                                id="county"
-                                name="county"
+                                id="country"
+                                name="country"
                                 as={Input}
                                 placeholder="Pais"
                                 className="inputs"
@@ -166,7 +169,6 @@ export const RegistrationForm = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label htmlFor="municipality" className="titles"></label>
                             <Field
                                 id="municipality"
                                 name="municipality"
@@ -181,7 +183,6 @@ export const RegistrationForm = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label htmlFor="password" className="titles"></label>
                             <Field
                                 id="password"
                                 name="password"
@@ -200,7 +201,6 @@ export const RegistrationForm = () => {
                         </div>
                         <br />
                         <div className="form-group">
-                            <label htmlFor="confirmpassword" className="titles"></label>
                             <Field
                                 id="confirmpassword"
                                 name="confirmpassword"
@@ -223,7 +223,7 @@ export const RegistrationForm = () => {
 
                 <div className="buttonsContainer">
                     <Button className="log-in" type="primary" htmlType="submit">
-                        REGISTRARSE
+                        REGISTRATE
                     </Button>
                     <label className="sign-in-text">
                         ¿Ya tienes una cuenta? <Link to="/login">Inicia Sesión</Link>
@@ -233,3 +233,6 @@ export const RegistrationForm = () => {
         </Formik>
     );
 };
+
+/* Artículo para definir tipo de docuemnto */
+/*https://www.cancilleria.gov.co/sites/default/files/Normograma/docs/resolucion_uaemc_2061_2020.htm */

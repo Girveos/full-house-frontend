@@ -13,6 +13,8 @@ const RegisterPage = () => {
   return (
     <div className="register-page-container">
       <div className="logo-container">
+        <h2>Crea una cuenta</h2>
+        <h5>¡Es rápido y fácil!</h5>
         <img src={logo} alt="Logo" className='full-house-logo' />
       </div>
       <div className="form-container">

@@ -9,10 +9,16 @@
         display: flex;
         margin: 5px;
         flex-direction: column;
+        .inputs{
+          width: 100%;
+        }
     }
 }
 .form-group {
     width: 100%;
+    .ant-select {
+      width: 100%;
+    }
     .titles {
       color: black;
       font-size: 1.3vw;
