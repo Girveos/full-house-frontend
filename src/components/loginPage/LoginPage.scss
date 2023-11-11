@@ -1,0 +1,53 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.contentLogin {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5vw;
+  @media (max-width: 850px) {
+    margin-top: 20vw;
+  }
+  h2 {
+    color: black;
+    display: flex;
+    justify-content: center;
+    font-size: 1.7vw;
+    @media (max-width: 850px) {
+      font-size: 3.5vw;
+    }
+  }
+  .Logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .fullHouseLogo {
+      width: auto;
+      height: 12vw;
+      @media (max-width: 850px) {
+        height: 25vw;
+      }
+    }
+  }
+  .inputs-box {
+    display: flex;
+    justify-content: center;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    .sign-up {
+      font-size: smaller;
+      justify-self: center;
+      margin-top: 15px;
+      color: white;
+      background-color: black;
+      &:hover {
+        background-color: rgb(24, 59, 134);
+      }
+    }
+  }
+}

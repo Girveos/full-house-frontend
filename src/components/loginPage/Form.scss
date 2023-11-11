@@ -1,0 +1,54 @@
+.form-group {
+  width: 20vw;
+  .titles {
+    color: black;
+    font-size: 1.3vw;
+    font-weight: bold;
+    font-variant: all-petite-caps;
+    @media (max-width: 850px) {
+      font-size: 3.3vw;
+    }
+  }
+  .ant-input-affix-wrapper {
+    width: 20vw;
+    @media (max-width: 850px) {
+      width: 182px;
+    }
+  }
+}
+.buttonsContainer {
+  display: grid;
+  button{
+    color: #fff;
+    background-color: #70747b;
+    box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+  }
+  .forgotPassword {
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+    font-size: smaller;
+    font-weight: bold;
+    font-variant: all-petite-caps;
+    padding-bottom: 30px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #000;
+  }
+  .sign-in-text{
+    color: black;
+    font-size: smaller;
+    font-weight: bold;
+    font-variant: all-petite-caps;
+    justify-self: center;
+  }
+}
+.button-forgot-password{
+    margin-top: 10px;
+    background-color: #000;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}

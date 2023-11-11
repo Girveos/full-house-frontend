@@ -1,0 +1,65 @@
+/* Estilo para el slide */
+.containers{
+  background: linear-gradient(180deg,#d2eeff, #ffdcdc);
+  height: 100vh;
+}
+.slick-slide {
+  img {
+    margin: auto;
+  }
+}
+
+.slick-slide img {
+  margin: auto;
+  height: 400px;
+}
+
+button.slick-prev {
+  left: 200px;
+  top:320px;
+  z-index: 2;
+}
+
+button.slick-next {
+  right: 200px;
+  top:320px;
+  z-index: 2;
+}
+
+li.slick-active {
+  > button::before {
+    color: rgb(2, 2, 2) !important;
+    background-color: transparent !important; /* Añade esto para asegurarte de que no haya un fondo blanco */
+  }
+}
+
+button.slick-prev:before,
+button.slick-next:before {
+  font-size: 30px;
+  position: sticky;
+  color: rgb(15, 14, 14);
+}
+
+div.slick-list {
+  top: 100px;
+}
+
+div.slick-track {
+  position: relative;
+  top: 10px;
+  left: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ul.slick-dots {
+  position: absolute;
+  bottom: -125px;
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+}

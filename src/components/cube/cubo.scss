@@ -1,0 +1,377 @@
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  & .cube {
+    width: 100px;
+    height: 100px;
+    transform-style: preserve-3d;
+    animation: spin 8s infinite linear;
+    position: fixed;
+    bottom: 175px;
+    right: 50px;
+    & div {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      opacity: 0.8;
+    }
+    & .front {
+      transform: translateZ(50px);
+      background: linear-gradient(45deg, #666f88, #aaaaaa);
+    }
+    & .back {
+      transform: translateZ(-50px);
+      background: linear-gradient(45deg, #666f88, #aaaaaa);
+    }
+    & .top {
+      transform: rotateX(90deg) translateZ(50px);
+      background: linear-gradient(45deg, #666f88, #aaaaaa);
+    }
+    & .bottom {
+      transform: rotateX(90deg) translateZ(-50px);
+      background: linear-gradient(45deg, #666f88, #aaaaaa);
+    }
+    & .left {
+      transform: rotateY(90deg) translateZ(50px);
+      background: linear-gradient(45deg, #666f88, #aaaaaa);
+    }
+    & .right {
+      transform: rotateY(90deg) translateZ(-50px);
+      background: linear-gradient(45deg, #666f88, #aaaaaa);
+    }
+  }
+}
+  
+  .optionsContainer{
+    display:none;
+    position: absolute;
+    top: 10%;
+    left: 86%;
+    z-index: 1;
+    & .cube1 {
+      width: 100px;
+      height: 100px;
+      transform-style: preserve-3d;
+      transform: rotateX(-20deg) rotateY(-20deg) scaleX(0.5) scaleY(0.5) scaleZ(0.5);
+      position: fixed;
+      bottom: 300px; /*250*/
+      right: 50px;  /*100*/
+      & div {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        opacity: 0.8;
+        transform: scale(1);
+      }
+      & .front {
+        transform: translateZ(50px);
+        background: linear-gradient(45deg,#2c64d3, #898F9C);
+      }
+      & .back {
+        transform: translateZ(-50px);
+        background: linear-gradient(45deg,#2c64d3, #898F9C);
+      }
+      & .top {
+        transform: rotateX(90deg) translateZ(50px);
+        background: linear-gradient(45deg,#2c64d3, #898F9C);
+      }
+      & .bottom {
+        transform: rotateX(90deg) translateZ(-50px);
+        background: linear-gradient(45deg,#2c64d3, #898F9C);
+      }
+      & .left {
+        transform: rotateY(90deg) translateZ(50px);
+        background: linear-gradient(45deg,#2c64d3, #898F9C);
+      }
+      & .right {
+        transform: rotateY(90deg) translateZ(-50px);
+        background: linear-gradient(45deg,#2c64d3, #898F9C);
+      }
+    }
+    & .cube2 {
+      width: 100px;
+      height: 100px;
+      transform-style: preserve-3d;
+      transform: rotateX(-20deg) rotateY(-20deg) scaleX(0.5) scaleY(0.5) scaleZ(0.5);
+      position: fixed;
+      bottom: 375px; /*350*/
+      right: 50px;  /*100*/
+      & div {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        opacity: 0.8;
+        transform: scale(1);
+      }
+      & .front {
+        transform: translateZ(50px);
+        background: linear-gradient(45deg,#25D366, #128C7E);
+      }
+      & .back {
+        transform: translateZ(-50px);
+        background: linear-gradient(45deg,#25D366, #128C7E);
+      }
+      & .top {
+        transform: rotateX(90deg) translateZ(50px);
+        background: linear-gradient(45deg,#25D366, #128C7E);
+      }
+      & .bottom {
+        transform: rotateX(90deg) translateZ(-50px);
+        background: linear-gradient(45deg,#25D366, #128C7E);
+      }
+      & .left {
+        transform: rotateY(90deg) translateZ(50px);
+        background: linear-gradient(45deg,#25D366, #128C7E);
+      }
+      & .right {
+        transform: rotateY(90deg) translateZ(-50px);
+        background: linear-gradient(45deg,#25D366, #128C7E);
+      }
+    }
+    & .cube3 {
+      width: 100px;
+      height: 100px;
+      transform-style: preserve-3d;
+      transform: rotateX(-20deg) rotateY(-20deg) scaleX(0.5) scaleY(0.5) scaleZ(0.5);
+      position: fixed;
+      bottom: 460px; /*450*/
+      right: 50px;  /*100*/
+      & div {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        opacity: 0.8;
+        transform: scale(1);
+      }
+      & .front {
+        transform: translateZ(50px);
+        background: linear-gradient(45deg,#FF0000, #fc6262);
+      }
+      & .back {
+        transform: translateZ(-50px);
+        background: linear-gradient(45deg,#FF0000, #fc6262);
+      }
+      & .top {
+        transform: rotateX(90deg) translateZ(50px);
+        background: linear-gradient(45deg,#FF0000, #fc6262);
+      }
+      & .bottom {
+        transform: rotateX(90deg) translateZ(-50px);
+        background: linear-gradient(45deg,#FF0000, #fc6262);
+      }
+      & .left {
+        transform: rotateY(90deg) translateZ(50px);
+        background: linear-gradient(45deg,#FF0000, #fc6262);
+      }
+      & .right {
+        transform: rotateY(90deg) translateZ(-50px);
+        background: linear-gradient(45deg,#FF0000, #fc6262);
+      }
+    }
+  }
+
+  @keyframes spin{
+      0%{
+          transform: rotateX(0deg) rotateY(0deg);
+      }
+      100%{
+          transform: rotateX(360deg) rotateY(360deg);
+      }
+  }
+
+  @media (max-width: 730px) {
+    .loader {
+      display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+      & .cube {
+        width: 50px;
+        height: 50px;
+        transform-style: preserve-3d;
+        animation: spin 8s infinite linear;
+        position: fixed;
+        bottom: 165px;
+        right: 50px;
+        & div {
+          position: absolute;
+          width: 50px;
+          height: 50px;
+          opacity: 0.8;
+        }
+        & .front {
+          transform: translateZ(25px);
+          background: linear-gradient(45deg, #666f88, #aaaaaa);
+        }
+        & .back {
+          transform: translateZ(-25px);
+          background: linear-gradient(45deg, #666f88, #aaaaaa);
+        }
+        & .top {
+          transform: rotateX(90deg) translateZ(25px);
+          background: linear-gradient(45deg, #666f88, #aaaaaa);
+        }
+        & .bottom {
+          transform: rotateX(90deg) translateZ(-25px);
+          background: linear-gradient(45deg, #666f88, #aaaaaa);
+        }
+        & .left {
+          transform: rotateY(90deg) translateZ(25px);
+          background: linear-gradient(45deg, #666f88, #aaaaaa);
+        }
+        & .right {
+          transform: rotateY(90deg) translateZ(-25px);
+          background: linear-gradient(45deg, #666f88, #aaaaaa);
+        }
+      }
+    }
+      
+      .optionsContainer{
+        display:none;
+        position: absolute;
+        top: 10%;
+        left: 86%;
+        z-index: 1;
+        & .cube1 {
+          width: 50px;
+          height: 50px;
+          transform-style: preserve-3d;
+          transform: rotateX(-20deg) rotateY(-20deg) scaleX(0.5) scaleY(0.5) scaleZ(0.5);
+          position: fixed;
+          bottom: 235px;
+          right: 45px;
+          & div {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            opacity: 0.8;
+            transform: scale(1);
+          }
+          & .front {
+            transform: translateZ(25px);
+            background: linear-gradient(45deg,#2c64d3, #898F9C);
+            img{
+              width: -webkit-fill-available;
+            }
+          }
+          & .back {
+            transform: translateZ(-25px);
+            background: linear-gradient(45deg,#2c64d3, #898F9C);
+          }
+          & .top {
+            transform: rotateX(90deg) translateZ(25px);
+            background: linear-gradient(45deg,#2c64d3, #898F9C);
+          }
+          & .bottom {
+            transform: rotateX(90deg) translateZ(-25px);
+            background: linear-gradient(45deg,#2c64d3, #898F9C);
+          }
+          & .left {
+            transform: rotateY(90deg) translateZ(25px);
+            background: linear-gradient(45deg,#2c64d3, #898F9C);
+          }
+          & .right {
+            transform: rotateY(90deg) translateZ(-26px);
+            background: linear-gradient(45deg,#2c64d3, #898F9C);
+          }
+        }
+        & .cube2 {
+          width: 50px;
+          height: 50px;
+          transform-style: preserve-3d;
+          transform: rotateX(-20deg) rotateY(-20deg) scaleX(0.5) scaleY(0.5) scaleZ(0.5);
+          position: fixed;
+          bottom: 275px;
+          right: 45px;
+          & div {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            opacity: 0.8;
+            transform: scale(1);
+          }
+          & .front {
+            transform: translateZ(25px);
+            background: linear-gradient(45deg,#25D366, #128C7E);
+            img{
+              width: -webkit-fill-available;
+            }
+          }
+          & .back {
+            transform: translateZ(-25px);
+            background: linear-gradient(45deg,#25D366, #128C7E);
+          }
+          & .top {
+            transform: rotateX(90deg) translateZ(25px);
+            background: linear-gradient(45deg,#25D366, #128C7E);
+          }
+          & .bottom {
+            transform: rotateX(90deg) translateZ(-25px);
+            background: linear-gradient(45deg,#25D366, #128C7E);
+          }
+          & .left {
+            transform: rotateY(90deg) translateZ(25px);
+            background: linear-gradient(45deg,#25D366, #128C7E);
+          }
+          & .right {
+            transform: rotateY(90deg) translateZ(-25px);
+            background: linear-gradient(45deg,#25D366, #128C7E);
+          }
+        }
+        & .cube3 {
+          width: 50px;
+          height: 50px;
+          transform-style: preserve-3d;
+          transform: rotateX(-20deg) rotateY(-20deg) scaleX(0.5) scaleY(0.5) scaleZ(0.5);
+          position: fixed;
+          bottom: 315px;
+          right: 45px;
+          & div {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            opacity: 0.8;
+            transform: scale(1);
+          }
+          & .front {
+            transform: translateZ(25px);
+            background: linear-gradient(45deg,#FF0000, #fc6262);
+            img{
+              width: -webkit-fill-available;
+            }
+          }
+          & .back {
+            transform: translateZ(-25px);
+            background: linear-gradient(45deg,#FF0000, #fc6262);
+          }
+          & .top {
+            transform: rotateX(90deg) translateZ(25px);
+            background: linear-gradient(45deg,#FF0000, #fc6262);
+          }
+          & .bottom {
+            transform: rotateX(90deg) translateZ(-25px);
+            background: linear-gradient(45deg,#FF0000, #fc6262);
+          }
+          & .left {
+            transform: rotateY(90deg) translateZ(25px);
+            background: linear-gradient(45deg,#FF0000, #fc6262);
+          }
+          & .right {
+            transform: rotateY(90deg) translateZ(-25px);
+            background: linear-gradient(45deg,#FF0000, #fc6262);
+          }
+        }
+      }
+    
+      @keyframes spin{
+          0%{
+              transform: rotateX(0deg) rotateY(0deg);
+          }
+          100%{
+              transform: rotateX(360deg) rotateY(360deg);
+          }
+      }
+    
+  }
