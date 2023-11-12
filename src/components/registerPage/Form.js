@@ -1,7 +1,9 @@
 // Importaciones
 import React from "react";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Button, Input, Select } from "antd";
-import { UserOutlined, EyeTwoTone, EyeInvisibleOutlined, MailOutlined, SolutionOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { UserOutlined, EyeTwoTone, EyeInvisibleOutlined, MailOutlined, SolutionOutlined, UserSwitchOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -10,24 +12,149 @@ import './Form.scss';
 
 export const RegistrationForm = (props) => {
     const { Option } = Select;
-    const handleRegistrationSubmit = (values) => {
+    const [departamentos, setDepartamentos] = useState([]);
+    const [departamentoDisabled, setDepartamentoDisabled] = useState(true);
+    const [municipalityDisabled, setMunicipalityDisabled] = useState(true);
+    const [statelocalitationDisabled, setStatelocalitationDisabled] = useState(true);
+
+    const [municipios, setMunicipios] = useState([]);
+    const [paises, setPaises] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const handleDepartamentoChange = (value, { setFieldValue }) => {
+        setFieldValue("department", value);
+        fetchMunicipios(value);
+    };
+    const handleTipoDocumentoChange = (value, { setFieldValue }) => {
+        setFieldValue("documentType", value);
+    };
+
+
+
+    const handleRegistrationSubmit = (values, { setSubmitting }) => {
+        if (values.country !== 'Colombia') {
+            values.department = '';
+            values.municipality = '';
+        }
         console.log(values);
     };
+
+
+    useEffect(() => {
+        fetchPaises();
+        fetchDepartamentos();
+        fetchMunicipios();
+    }, []);
 
 
     const validationSchema = Yup.object().shape({
         Name: Yup.string().required("El nombre es requerido"),
         lastname: Yup.string().required("El apellido es requerido"),
-        documentType: Yup.string().oneOf(["CC", "TI", "Pasaporte", "Cédula de extranjería"]).required("El tipo de documento es requerido"),
-        document: Yup.string().required("El documento es necesario"),
-        country: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
-        department: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
-        municipality: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
-        statelocalitation: Yup.string().required("El apellido es requerido"), /*PENDIENTE*/
-        email: Yup.string().email("Ingresa un correo electrónico válido").required("El correo es requerido"),
-        password: Yup.string().required("La contraseña es requerida"),
-        confirmpassword: Yup.string().required("La contraseña es requerida"), /*PENDIENTE*/
+        email: Yup.string()
+            .email("Correo inválido")
+            .required("El correo es requerido"),
+        password: Yup.string()
+            .required("La contraseña es requerida")
+            .matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                "Es necesario al menos una mayúscula, una minúscula, un número y tener como mínimo 8 caracteres"
+            ),
+        confirmpassword: Yup.string()
+            .oneOf([Yup.ref("password"), null], "Las contraseñas deben ser iguales")
+            .required("Debes confirmar la contraseña"),
+        documentType: Yup.string()
+            .required("El tipo de documento es requerido")
+            .oneOf(
+                [
+                    "CC",
+                    "TI",
+                    "Cédula de Extranjería",
+                    "Pasaporte",
+                ],
+                "Tipo de documento inválido"
+            ),
+        document: Yup.string()
+            .required("El documento es requerido")
+            .matches(/^[0-9]+$/, "El documento debe contener solo números"),
+        country: Yup.string().required("El pais es requerido"),
+        department: Yup.string().test('required-if-colombia', 'El departamento es requerido', function (value) {
+            const { country } = this.parent;
+            return country === 'Colombia' ? !!value : true;
+        }),
+        municipality: Yup.string().test('required-if-colombia', 'El municipio es requerido', function (value) {
+            const { country } = this.parent;
+            return country === 'Colombia' ? !!value : true;
+        }),
     });
+
+
+    const fetchDepartamentos = async () => {
+        try {
+            const response = await axios.get(
+                "https://www.datos.gov.co/resource/xdk5-pm3f.json?$select=departamento"
+            );
+            const dataFilter = [...new Set(response.data.map(JSON.stringify))].map(
+                JSON.parse
+            );
+
+            const sortedDepartamentos = dataFilter.sort((a, b) =>
+                a.departamento.localeCompare(b.departamento)
+            );
+
+            setDepartamentos(sortedDepartamentos);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchMunicipios = async (departamento) => {
+        try {
+            setLoading(true);
+            const response = await axios.get(
+                `https://www.datos.gov.co/resource/xdk5-pm3f.json?$select=municipio&departamento=${departamento}`
+            );
+
+            const sortedMunicipios = response.data.sort((a, b) =>
+                a.municipio.localeCompare(b.municipio)
+            );
+
+            setMunicipios(sortedMunicipios);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    };
+
+    const fetchPaises = async () => {
+        try {
+            const response = await axios.get(
+                "https://restcountries.com/v3.1/all?fields=name"
+            );
+
+            const sortedPaises = response.data.sort((a, b) =>
+                a.name.common.localeCompare(b.name.common)
+            );
+            setPaises(sortedPaises);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleCountryChange = (selectedCountry) => {
+
+        if (selectedCountry === "Colombia") {
+            setDepartamentoDisabled(false);
+            setMunicipalityDisabled(false);
+            setStatelocalitationDisabled(true);
+        } else {
+            setDepartamentoDisabled(true);
+            setMunicipalityDisabled(true);
+            setStatelocalitationDisabled(false);
+        }
+    };
+
 
     return (
         <Formik
@@ -35,6 +162,7 @@ export const RegistrationForm = (props) => {
             validationSchema={validationSchema}
             onSubmit={handleRegistrationSubmit}
             validateOnBlur={false}
+            enableReinitialize={true}
         >
             <Form>
                 <div className="form-container">
@@ -88,14 +216,40 @@ export const RegistrationForm = (props) => {
                             <Field
                                 id="department"
                                 name="department"
-                                as={Input}
-                                placeholder="Departamento"
-                                className="inputs"
-                            />
-                            <ErrorMessage
-                                name="department"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
+                            >
+                                {({ field, form }) => (
+                                    <div className="form-group">
+                                        <Select
+                                            {...field}
+                                            className="inputs"
+                                            value={field.value}
+                                            onChange={(value) => {
+                                                form.setFieldValue("department", value);
+                                                fetchMunicipios(value);
+                                            }}
+                                            onBlur={() => form.setFieldTouched("department", true)}
+                                            placeholder="Departamento"
+                                            disabled={form.values.country !== "Colombia"} // Deshabilitar si el país no es Colombia
+                                        >
+                                            <Option value="" disabled>
+                                                Departamento
+                                            </Option>
+                                            {departamentos.map((departamento) => (
+                                                <Option
+                                                    key={departamento.departamento}
+                                                    value={departamento.departamento}
+                                                >
+                                                    {departamento.departamento}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                        {form.errors.department && form.touched.department && form.values.country === "Colombia" && (
+                                            <div className="error-message">{form.errors.department}</div>
+                                        )}
+                                    </div>
+                                )}
+                            </Field>
+
                         </div>
                         <br />
                         <div className="form-group">
@@ -105,6 +259,7 @@ export const RegistrationForm = (props) => {
                                 as={Input}
                                 placeholder="Estado"
                                 className="inputs"
+                                disabled={statelocalitationDisabled}
                             />
                             <ErrorMessage
                                 name="statelocalitation"
@@ -136,10 +291,13 @@ export const RegistrationForm = (props) => {
                                 {({ field, form }) => (
                                     <Select
                                         className="inputs"
-                                        value={field.value} 
+                                        value={field.value}
                                         onChange={(value) => form.setFieldValue("documentType", value)}
                                         onBlur={() => form.setFieldTouched("documentType", true)}
                                     >
+                                        <Option value="" disabled>
+                                            Tipo de documento
+                                        </Option>
                                         <Option value="CC">CC</Option>
                                         <Option value="TI">TI</Option>
                                         <Option value="Pasaporte">Pasaporte</Option>
@@ -158,28 +316,79 @@ export const RegistrationForm = (props) => {
                             <Field
                                 id="country"
                                 name="country"
-                                as={Input}
-                                placeholder="Pais"
-                                className="inputs"
-                            />
-                            <ErrorMessage
-                                name="country"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
+                            >
+                                {({ field, form }) => (
+                                    <div className="form-group">
+                                        <Select
+                                            {...field}
+                                            className="inputs"
+                                            value={field.value}
+                                            onChange={(value) => {
+                                                form.setFieldValue("country", value);
+                                                handleCountryChange(value);
+                                                if (value !== "Colombia") {
+                                                    form.setFieldValue("department", "");
+                                                    form.setFieldValue("municipality", "");
+                                                }
+                                            }}
+                                            onBlur={() => form.setFieldTouched("country", true)}
+                                        >
+                                            <Option value="" disabled>
+                                                País
+                                            </Option>
+                                            {paises.map((pais) => (
+                                                <Option
+                                                    key={pais.name.common}
+                                                    value={pais.name.common}
+                                                >
+                                                    {pais.name.common}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                        {form.errors.country && form.touched.country && (
+                                            <div className="error-message">{form.errors.country}</div>
+                                        )}
+                                    </div>
+                                )}
+                            </Field>
                         </div>
+
                         <br />
                         <div className="form-group">
                             <Field
                                 id="municipality"
                                 name="municipality"
-                                as={Input}
-                                placeholder="Municipio"
-                                className="inputs"
-                            />
-                            <ErrorMessage
-                                name="municipality"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
+                            >
+                                {({ field, form }) => (
+                                    <div className="form-group">
+                                        <Select
+                                            {...field}
+                                            className="inputs"
+                                            value={field.value}
+                                            onChange={(value) => form.setFieldValue("municipality", value)}
+                                            onBlur={() => form.setFieldTouched("municipality", true)}
+                                            placeholder="Municipio"
+                                            disabled={municipalityDisabled}
+                                        >
+                                            <Option value="" disabled>
+                                                Municipio
+                                            </Option>
+                                            {municipios.map((municipio) => (
+                                                <Option
+                                                    key={municipio.municipio}
+                                                    value={municipio.municipio}
+                                                >
+                                                    {municipio.municipio}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                        {form.errors.municipality && form.touched.municipality && form.values.country === "Colombia" && (
+                                            <div className="error-message">{form.errors.municipality}</div>
+                                        )}
+                                    </div>
+                                )}
+                            </Field>
+
                         </div>
                         <br />
                         <div className="form-group">
@@ -202,25 +411,21 @@ export const RegistrationForm = (props) => {
                         <br />
                         <div className="form-group">
                             <Field
-                                id="confirmpassword"
                                 name="confirmpassword"
-                                type="confirmpassword"
                                 as={Input.Password}
-                                placeholder="Confirmar contraseña"
-                                className="inputs"
+                                placeholder="Confirmar Contraseña"
                                 iconRender={(visible) =>
-                                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                    visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
                                 }
                             />
                             <ErrorMessage
-                                name="password"
-                                render={(msg) => <div className="error-message">{msg}</div>}
+                                name="confirmpassword"
+                                component="div"
+                                className="error-message"
                             />
                         </div>
                     </div>
                 </div>
-
-
                 <div className="buttonsContainer">
                     <Button className="log-in" type="primary" htmlType="submit">
                         REGISTRATE
