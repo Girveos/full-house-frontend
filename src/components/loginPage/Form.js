@@ -10,12 +10,21 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import './Form.scss'
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 export const LoginForm = () => {
+  const history = useNavigate();
+
+  let accessToken = null;
+
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [forgotPasswordModalVisible, setForgotPasswordModalVisible] =
     useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleForgotPasswordClick = () => {
     setForgotPasswordModalVisible(true);
@@ -35,10 +44,7 @@ export const LoginForm = () => {
     setForgotPasswordModalVisible(false);
   };
 
-  const handleLoginSubmit = (values) => {
-    console.log(values);
-    console.log("Correo electrónico para iniciar sesión:", values.loginEmail);
-    console.log("Contraseña para iniciar sesión:", values.password);
+  const handleLoginSubmit = async (values) => {
 
     if (!values.loginEmail || !values.password) {
       setShowErrorMessage(true);
@@ -49,8 +55,50 @@ export const LoginForm = () => {
     setShowErrorMessage(false);
     setErrorMessage("");
 
-    // Continuar con la lógica de inicio de sesión si las validaciones son exitosas
-    // ...
+    try {
+      const response = await fetch("http://localhost:3001/api/v1/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: values.loginEmail,
+          password: values.password,
+        }),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        accessToken = responseData.access;
+
+        let decodedToken = "";
+        try {
+          decodedToken = jwtDecode(responseData.access);
+        } catch (error) {
+          console.error("Error al decodificar el token:", error.message);
+          return;
+        }
+
+        if (decodedToken && decodedToken.role === "user") {
+          history(`/DashboardUserFullHouse?${accessToken}`);
+        }else if(decodedToken && decodedToken.role === "admin"){
+          history(`/DashboardAdminFullHouse?${accessToken}`);
+        } 
+        else {
+          console.error("Token inválido o rol incorrecto:", decodedToken);
+        }
+      } else {
+        if (response.status === 400) {
+          const errorMessage = "Correo electrónico o contraseña incorrectos. Por favor, valide sus credenciales e inténtelo nuevamente.";
+          setModalMessage(errorMessage);
+          setShowModal(true);
+        } else {
+          console.error("Error en la autenticación:", response.statusText);
+        }
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error.message);
+    }
   };
 
   const validationSchema = Yup.object().shape({
@@ -155,11 +203,18 @@ export const LoginForm = () => {
                 </Form>
               </Formik>
             </Modal>
+            <Modal
+              title="Error de Autenticación"
+              open={showModal}
+              onCancel={() => setShowModal(false)}
+              footer={null}
+            >
+              <p>{modalMessage}</p>
+            </Modal>
           </label>
           <label className="sign-in-text">¡Registrate!</label>
         </div>
       </Form>
     </Formik>
-    
   );
 };

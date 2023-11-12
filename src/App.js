@@ -10,6 +10,7 @@ import TermsAndConditionsPage from './components/terms/terms';
 import TranslucentMenu from './components/translucentMenu/translucentManu.js'
 import LoginPage from './components/loginPage/LoginPage';
 import RegisterPage from './components/registerPage/RegisterPage';
+import UserDashboard from './components/userdashboard/UserDashboard.js';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/terms" element={<TermsAndConditionsPage />} />
           <Route path="/LogIn" element={<LoginPage/>} />
           <Route path="/SignUp" element={<RegisterPage/>} />
+          <Route path="/DashboardUserFullHouse" element={<UserDashboard/>} />
           {/* Otras rutas aquí */}
         </Routes>
       </div>
