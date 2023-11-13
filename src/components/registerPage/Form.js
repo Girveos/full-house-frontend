@@ -2,7 +2,7 @@
 import React from "react";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Input, Select } from "antd";
+import { Button, Input, Select, Checkbox, Modal } from "antd";
 import { UserOutlined, EyeTwoTone, EyeInvisibleOutlined, MailOutlined, SolutionOutlined, UserSwitchOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -16,6 +16,9 @@ export const RegistrationForm = (props) => {
     const [departamentoDisabled, setDepartamentoDisabled] = useState(true);
     const [municipalityDisabled, setMunicipalityDisabled] = useState(true);
     const [statelocalitationDisabled, setStatelocalitationDisabled] = useState(true);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+    const [errorModalMessage, setErrorModalMessage] = useState('');
 
     const [municipios, setMunicipios] = useState([]);
     const [paises, setPaises] = useState([]);
@@ -31,13 +34,60 @@ export const RegistrationForm = (props) => {
 
 
 
-    const handleRegistrationSubmit = (values, { setSubmitting }) => {
+    const handleRegistrationSubmit = async (values, { setSubmitting }) => {
         if (values.country !== 'Colombia') {
             values.department = '';
             values.municipality = '';
         }
-        console.log(values);
+        try {
+            const response = await fetch("http://localhost:3001/api/v1/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    firstname: values.Name,
+                    lastname: values.lastname,
+                    email: values.email,
+                    password: values.password,
+                    country: values.country,
+                    depto: values.department,
+                    municipality: values.municipality,
+                    state: values.statelocalitation,
+                    documentType: values.documentType,
+                    document: values.document
+                }),
+            });
+
+            if (response.ok) {
+                setIsModalVisible(true);
+            } else {
+                const errorData = await response.json();
+                setErrorModalMessage(errorData.msg);
+                setIsErrorModalVisible(true);
+            }
+        } catch (error) {
+            console.error("Error en la solicitud:", error.message);
+        } finally {
+            setSubmitting(false);
+        }
     };
+
+    const handleModalOk = () => {
+        setIsModalVisible(false);
+    };
+    const handleModalCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleErrorModalOk = () => {
+        setIsErrorModalVisible(false);
+    };
+
+    const handleErrorModalCancel = () => {
+        setIsErrorModalVisible(false);
+    };
+
 
 
     useEffect(() => {
@@ -85,6 +135,9 @@ export const RegistrationForm = (props) => {
             const { country } = this.parent;
             return country === 'Colombia' ? !!value : true;
         }),
+        termsAndConditions: Yup.boolean()
+            .oneOf([true], "Debe aceptar los términos y condiciones")
+            .required("Debe aceptar los términos y condiciones")
     });
 
 
@@ -164,277 +217,318 @@ export const RegistrationForm = (props) => {
             validateOnBlur={false}
             enableReinitialize={true}
         >
-            <Form>
-                <div className="form-container">
-                    <div className="column1">
-                        <div className="form-group">
-                            <Field
-                                id="Name"
-                                name="Name"
-                                as={Input}
-                                prefix={<UserOutlined />}
-                                placeholder="Nombre"
-                                className="inputs"
-                            />
-                            <ErrorMessage
-                                name="Name"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
-                        </div>
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                id="email"
-                                name="email"
-                                as={Input}
-                                prefix={<MailOutlined />}
-                                placeholder="Correo Electrónico"
-                                className="inputs"
-                            />
-                            <ErrorMessage
-                                name="email"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
-                        </div>
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                id="document"
-                                name="document"
-                                as={Input}
-                                prefix={<SolutionOutlined />}
-                                placeholder="Documento"
-                                className="inputs"
-                            />
-                            <ErrorMessage
-                                name="document"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
-                        </div>
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                id="department"
-                                name="department"
-                            >
-                                {({ field, form }) => (
-                                    <div className="form-group">
-                                        <Select
-                                            {...field}
-                                            className="inputs"
-                                            value={field.value}
-                                            onChange={(value) => {
-                                                form.setFieldValue("department", value);
-                                                fetchMunicipios(value);
-                                            }}
-                                            onBlur={() => form.setFieldTouched("department", true)}
-                                            placeholder="Departamento"
-                                            disabled={form.values.country !== "Colombia"} // Deshabilitar si el país no es Colombia
-                                        >
-                                            <Option value="" disabled>
-                                                Departamento
-                                            </Option>
-                                            {departamentos.map((departamento) => (
-                                                <Option
-                                                    key={departamento.departamento}
-                                                    value={departamento.departamento}
-                                                >
-                                                    {departamento.departamento}
+            {({ values, setFieldValue }) => (
+                <Form>
+                    <div className="form-container">
+                        <div className="column1">
+                            <div className="form-group">
+                                <Field
+                                    id="Name"
+                                    name="Name"
+                                    as={Input}
+                                    prefix={<UserOutlined />}
+                                    placeholder="Nombre"
+                                    className="inputs"
+                                />
+                                <ErrorMessage
+                                    name="Name"
+                                    render={(msg) => <div className="error-message">{msg}</div>}
+                                />
+                            </div>
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    id="email"
+                                    name="email"
+                                    as={Input}
+                                    prefix={<MailOutlined />}
+                                    placeholder="Correo Electrónico"
+                                    className="inputs"
+                                />
+                                <ErrorMessage
+                                    name="email"
+                                    render={(msg) => <div className="error-message">{msg}</div>}
+                                />
+                            </div>
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    id="document"
+                                    name="document"
+                                    as={Input}
+                                    prefix={<SolutionOutlined />}
+                                    placeholder="Documento"
+                                    className="inputs"
+                                />
+                                <ErrorMessage
+                                    name="document"
+                                    render={(msg) => <div className="error-message">{msg}</div>}
+                                />
+                            </div>
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    id="department"
+                                    name="department"
+                                >
+                                    {({ field, form }) => (
+                                        <div className="form-group">
+                                            <Select
+                                                {...field}
+                                                className="inputs"
+                                                value={field.value}
+                                                onChange={(value) => {
+                                                    form.setFieldValue("department", value);
+                                                    fetchMunicipios(value);
+                                                }}
+                                                onBlur={() => form.setFieldTouched("department", true)}
+                                                placeholder="Departamento"
+                                                disabled={form.values.country !== "Colombia"} // Deshabilitar si el país no es Colombia
+                                            >
+                                                <Option value="" disabled>
+                                                    Departamento
                                                 </Option>
-                                            ))}
-                                        </Select>
-                                        {form.errors.department && form.touched.department && form.values.country === "Colombia" && (
-                                            <div className="error-message">{form.errors.department}</div>
-                                        )}
-                                    </div>
-                                )}
-                            </Field>
+                                                {departamentos.map((departamento) => (
+                                                    <Option
+                                                        key={departamento.departamento}
+                                                        value={departamento.departamento}
+                                                    >
+                                                        {departamento.departamento}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                            {form.errors.department && form.touched.department && form.values.country === "Colombia" && (
+                                                <div className="error-message">{form.errors.department}</div>
+                                            )}
+                                        </div>
+                                    )}
+                                </Field>
+
+
+                            </div>
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    id="statelocalitation"
+                                    name="statelocalitation"
+                                    as={Input}
+                                    placeholder="Estado"
+                                    className="inputs"
+                                    disabled={statelocalitationDisabled}
+                                />
+                                <ErrorMessage
+                                    name="statelocalitation"
+                                    render={(msg) => <div className="error-message">{msg}</div>}
+                                />
+                            </div>
+                            <br />
 
                         </div>
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                id="statelocalitation"
-                                name="statelocalitation"
-                                as={Input}
-                                placeholder="Estado"
-                                className="inputs"
-                                disabled={statelocalitationDisabled}
-                            />
-                            <ErrorMessage
-                                name="statelocalitation"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
+                        <div className="column2">
+                            <div className="form-group">
+                                <Field
+                                    id="lastname"
+                                    name="lastname"
+                                    as={Input}
+                                    prefix={<UserSwitchOutlined />}
+                                    placeholder="Apellido"
+                                    className="inputs"
+                                />
+                                <ErrorMessage
+                                    name="lastname"
+                                    render={(msg) => <div className="error-message">{msg}</div>}
+                                />
+                            </div>
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    id="documentType"
+                                    name="documentType"
+                                >
+                                    {({ field, form }) => (
+                                        <Select
+                                            className="inputs"
+                                            value={field.value}
+                                            onChange={(value) => form.setFieldValue("documentType", value)}
+                                            onBlur={() => form.setFieldTouched("documentType", true)}
+                                        >
+                                            <Option value="" disabled>
+                                                Tipo de documento
+                                            </Option>
+                                            <Option value="CC">CC</Option>
+                                            <Option value="TI">TI</Option>
+                                            <Option value="Pasaporte">Pasaporte</Option>
+                                            <Option value="Cédula de extranjería">Cédula de extranjería</Option>
+                                        </Select>
+                                    )}
+                                </Field>
+                                <ErrorMessage
+                                    name="documentType"
+                                    render={(msg) => <div className="error-message">{msg}</div>}
+                                />
+                            </div>
+
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    id="country"
+                                    name="country"
+                                >
+                                    {({ field, form }) => (
+                                        <div className="form-group">
+                                            <Select
+                                                {...field}
+                                                className="inputs"
+                                                value={field.value}
+                                                onChange={(value) => {
+                                                    form.setFieldValue("country", value);
+                                                    handleCountryChange(value);
+                                                    if (value !== "Colombia") {
+                                                        form.setFieldValue("department", "");
+                                                        form.setFieldValue("municipality", "");
+                                                    }
+                                                }}
+                                                onBlur={() => form.setFieldTouched("country", true)}
+                                            >
+                                                <Option value="" disabled>
+                                                    País
+                                                </Option>
+                                                {paises.map((pais) => (
+                                                    <Option
+                                                        key={pais.name.common}
+                                                        value={pais.name.common}
+                                                    >
+                                                        {pais.name.common}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                            {form.errors.country && form.touched.country && (
+                                                <div className="error-message">{form.errors.country}</div>
+                                            )}
+                                        </div>
+                                    )}
+                                </Field>
+                            </div>
+
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    id="municipality"
+                                    name="municipality"
+                                >
+                                    {({ field, form }) => (
+                                        <div className="form-group">
+                                            <Select
+                                                {...field}
+                                                className="inputs"
+                                                value={field.value}
+                                                onChange={(value) => form.setFieldValue("municipality", value)}
+                                                onBlur={() => form.setFieldTouched("municipality", true)}
+                                                placeholder="Municipio"
+                                                disabled={municipalityDisabled}
+                                            >
+                                                <Option value="" disabled>
+                                                    Municipio
+                                                </Option>
+                                                {municipios.map((municipio) => (
+                                                    <Option
+                                                        key={municipio.municipio}
+                                                        value={municipio.municipio}
+                                                    >
+                                                        {municipio.municipio}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                            {form.errors.municipality && form.touched.municipality && form.values.country === "Colombia" && (
+                                                <div className="error-message">{form.errors.municipality}</div>
+                                            )}
+                                        </div>
+                                    )}
+                                </Field>
+
+                            </div>
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    as={Input.Password}
+                                    placeholder="Contraseña"
+                                    className="inputs"
+                                    iconRender={(visible) =>
+                                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                    }
+                                />
+                                <ErrorMessage
+                                    name="password"
+                                    render={(msg) => <div className="error-message">{msg}</div>}
+                                />
+                            </div>
+                            <br />
+                            <div className="form-group">
+                                <Field
+                                    name="confirmpassword"
+                                    as={Input.Password}
+                                    placeholder="Confirmar Contraseña"
+                                    iconRender={(visible) =>
+                                        visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+                                    }
+                                />
+                                <ErrorMessage
+                                    name="confirmpassword"
+                                    component="div"
+                                    className="error-message"
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="column2">
-                        <div className="form-group">
-                            <Field
-                                id="lastname"
-                                name="lastname"
-                                as={Input}
-                                prefix={<UserSwitchOutlined />}
-                                placeholder="Apellido"
-                                className="inputs"
-                            />
-                            <ErrorMessage
-                                name="lastname"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
-                        </div>
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                id="documentType"
-                                name="documentType"
-                            >
-                                {({ field, form }) => (
-                                    <Select
-                                        className="inputs"
-                                        value={field.value}
-                                        onChange={(value) => form.setFieldValue("documentType", value)}
-                                        onBlur={() => form.setFieldTouched("documentType", true)}
-                                    >
-                                        <Option value="" disabled>
-                                            Tipo de documento
-                                        </Option>
-                                        <Option value="CC">CC</Option>
-                                        <Option value="TI">TI</Option>
-                                        <Option value="Pasaporte">Pasaporte</Option>
-                                        <Option value="Cédula de extranjería">Cédula de extranjería</Option>
-                                    </Select>
-                                )}
-                            </Field>
-                            <ErrorMessage
-                                name="documentType"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
-                        </div>
-
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                id="country"
-                                name="country"
-                            >
-                                {({ field, form }) => (
-                                    <div className="form-group">
-                                        <Select
-                                            {...field}
-                                            className="inputs"
-                                            value={field.value}
-                                            onChange={(value) => {
-                                                form.setFieldValue("country", value);
-                                                handleCountryChange(value);
-                                                if (value !== "Colombia") {
-                                                    form.setFieldValue("department", "");
-                                                    form.setFieldValue("municipality", "");
-                                                }
-                                            }}
-                                            onBlur={() => form.setFieldTouched("country", true)}
-                                        >
-                                            <Option value="" disabled>
-                                                País
-                                            </Option>
-                                            {paises.map((pais) => (
-                                                <Option
-                                                    key={pais.name.common}
-                                                    value={pais.name.common}
-                                                >
-                                                    {pais.name.common}
-                                                </Option>
-                                            ))}
-                                        </Select>
-                                        {form.errors.country && form.touched.country && (
-                                            <div className="error-message">{form.errors.country}</div>
-                                        )}
-                                    </div>
-                                )}
-                            </Field>
-                        </div>
-
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                id="municipality"
-                                name="municipality"
-                            >
-                                {({ field, form }) => (
-                                    <div className="form-group">
-                                        <Select
-                                            {...field}
-                                            className="inputs"
-                                            value={field.value}
-                                            onChange={(value) => form.setFieldValue("municipality", value)}
-                                            onBlur={() => form.setFieldTouched("municipality", true)}
-                                            placeholder="Municipio"
-                                            disabled={municipalityDisabled}
-                                        >
-                                            <Option value="" disabled>
-                                                Municipio
-                                            </Option>
-                                            {municipios.map((municipio) => (
-                                                <Option
-                                                    key={municipio.municipio}
-                                                    value={municipio.municipio}
-                                                >
-                                                    {municipio.municipio}
-                                                </Option>
-                                            ))}
-                                        </Select>
-                                        {form.errors.municipality && form.touched.municipality && form.values.country === "Colombia" && (
-                                            <div className="error-message">{form.errors.municipality}</div>
-                                        )}
-                                    </div>
-                                )}
-                            </Field>
-
-                        </div>
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                id="password"
-                                name="password"
-                                type="password"
-                                as={Input.Password}
-                                placeholder="Contraseña"
-                                className="inputs"
-                                iconRender={(visible) =>
-                                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                }
-                            />
-                            <ErrorMessage
-                                name="password"
-                                render={(msg) => <div className="error-message">{msg}</div>}
-                            />
-                        </div>
-                        <br />
-                        <div className="form-group">
-                            <Field
-                                name="confirmpassword"
-                                as={Input.Password}
-                                placeholder="Confirmar Contraseña"
-                                iconRender={(visible) =>
-                                    visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-                                }
-                            />
-                            <ErrorMessage
-                                name="confirmpassword"
-                                component="div"
-                                className="error-message"
-                            />
-                        </div>
+                    <div className="terms">
+                        <Checkbox
+                            id="termsAndConditions"
+                            name="termsAndConditions"
+                            checked={values.termsAndConditions}
+                            onChange={() => setFieldValue("termsAndConditions", !values.termsAndConditions)}
+                        >
+                            Acepto los {" "}
+                            <Link to="/terms" className="terms-link">
+                                términos y condiciones
+                            </Link>
+                        </Checkbox>
+                        <ErrorMessage
+                            name="termsAndConditions"
+                            render={(msg) => <div className="error-message">{msg}</div>}
+                        />
                     </div>
-                </div>
-                <div className="buttonsContainer">
-                    <Button className="log-in" type="primary" htmlType="submit">
-                        REGISTRATE
-                    </Button>
-                    <label className="sign-in-text">
-                        ¿Ya tienes una cuenta? <Link to="/login">Inicia Sesión</Link>
-                    </label>
-                </div>
-            </Form>
+                    <div className="buttonsContainer">
+                        <Button className="log-in" type="primary" htmlType="submit" disabled={!values.termsAndConditions}>
+                            REGISTRATE
+                        </Button>
+                        <label className="sign-in-text">
+                            ¿Ya tienes una cuenta? <Link to="/login">Inicia Sesión</Link>
+                        </label>
+                    </div>
+                    <div><Modal
+                        title="Registro Exitoso"
+                        open={isModalVisible}
+                        onOk={handleModalOk}
+                        onCancel={handleModalCancel}
+                    >
+                        <p>Ya se encuentra registrado en FullHosue_Shoes</p>
+                    </Modal>
+
+                        <Modal
+                            title="Error en el Registro"
+                            open={isErrorModalVisible}
+                            onOk={handleErrorModalOk}
+                            onCancel={handleErrorModalCancel}
+                        >
+                            <p>{errorModalMessage}</p>
+                        </Modal>
+
+                    </div>
+                </Form>
+            )}
         </Formik>
     );
 };

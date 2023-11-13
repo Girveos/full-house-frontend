@@ -7,12 +7,14 @@ import WhatsAppPage from './components/whatsapp/whatsapp';
 import YoutubePage from './components/youtube/youtube';
 import MenuReact from './components/menu/MenuReact';
 import TermsAndConditionsPage from './components/terms/terms';
-import TranslucentMenu from './components/translucentMenu/translucentManu.js'
 import LoginPage from './components/loginPage/LoginPage';
 import RegisterPage from './components/registerPage/RegisterPage';
+import AuthGuard from './AuthGuard';
 import UserDashboard from './components/userdashboard/UserDashboard.js';
+import AdminDashboard from './components/admindashboard/AdminDashboard.js';
 
 function App() {
+
   return (
     <Router>
       <div className="app-container">
@@ -21,8 +23,8 @@ function App() {
             path="/"
             element={
               <>
-                 <MenuReact />
-                {/*<CubeReact />*/} 
+                <MenuReact />
+                {/*<CubeReact />*/}
                 {/* <TranslucentMenu /> */}
               </>
             }
@@ -31,10 +33,16 @@ function App() {
           <Route path="/whatsapp" element={<WhatsAppPage />} />
           <Route path="/youtube" element={<YoutubePage />} />
           <Route path="/terms" element={<TermsAndConditionsPage />} />
-          <Route path="/LogIn" element={<LoginPage/>} />
-          <Route path="/SignUp" element={<RegisterPage/>} />
-          <Route path="/DashboardUserFullHouse" element={<UserDashboard/>} />
-          {/* Otras rutas aquí */}
+          <Route path="/LogIn" element={<LoginPage />} />
+          <Route path="/SignUp" element={<RegisterPage />} />
+          <Route
+            path="/DashboardUserFullHouse"
+            element={<AuthGuard requiredRole="user"><UserDashboard /></AuthGuard>}
+          />
+          <Route
+            path="/DashboardAdminFullHouse"
+            element={<AuthGuard requiredRole="admin"><AdminDashboard /></AuthGuard>}
+          />
         </Routes>
       </div>
     </Router>

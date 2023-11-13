@@ -13,6 +13,7 @@ import './Form.scss'
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
+
 export const LoginForm = () => {
   const history = useNavigate();
 
@@ -25,6 +26,8 @@ export const LoginForm = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+  const [errorModalMessage, setErrorModalMessage] = useState('');
 
   const handleForgotPasswordClick = () => {
     setForgotPasswordModalVisible(true);
@@ -69,29 +72,29 @@ export const LoginForm = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        accessToken = responseData.access;
-
         let decodedToken = "";
         try {
           decodedToken = jwtDecode(responseData.access);
+          localStorage.setItem("accessToken", responseData.access);
+          localStorage.setItem("refreshToken", responseData.refresh);
         } catch (error) {
           console.error("Error al decodificar el token:", error.message);
           return;
         }
 
         if (decodedToken && decodedToken.role === "user") {
-          history(`/DashboardUserFullHouse?${accessToken}`);
-        }else if(decodedToken && decodedToken.role === "admin"){
-          history(`/DashboardAdminFullHouse?${accessToken}`);
-        } 
+          history(`/DashboardUserFullHouse`);
+        } else if (decodedToken && decodedToken.role === "admin") {
+          history(`/DashboardAdminFullHouse`);
+        }
         else {
           console.error("Token inválido o rol incorrecto:", decodedToken);
         }
       } else {
         if (response.status === 400) {
-          const errorMessage = "Correo electrónico o contraseña incorrectos. Por favor, valide sus credenciales e inténtelo nuevamente.";
-          setModalMessage(errorMessage);
-          setShowModal(true);
+          const errorData = await response.json();
+          setErrorModalMessage(errorData.msg);
+          setIsErrorModalVisible(true);
         } else {
           console.error("Error en la autenticación:", response.statusText);
         }
@@ -107,6 +110,14 @@ export const LoginForm = () => {
       .required("El correo es requerido"),
     password: Yup.string().required("La contraseña es requerida"),
   });
+
+  const handleErrorModalOk = () => {
+    setIsErrorModalVisible(false);
+  };
+
+  const handleErrorModalCancel = () => {
+    setIsErrorModalVisible(false);
+  };
 
   return (
     <Formik
@@ -205,11 +216,11 @@ export const LoginForm = () => {
             </Modal>
             <Modal
               title="Error de Autenticación"
-              open={showModal}
-              onCancel={() => setShowModal(false)}
-              footer={null}
+              open={isErrorModalVisible}
+              onOk={handleErrorModalOk}
+              onCancel={handleErrorModalCancel}
             >
-              <p>{modalMessage}</p>
+              <p>{errorModalMessage}</p>
             </Modal>
           </label>
           <label className="sign-in-text">¡Registrate!</label>
