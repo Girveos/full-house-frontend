@@ -70,3 +70,33 @@
   text-decoration: underline;
   cursor: pointer;
 }
+.textAvatar{
+  font-size: smaller;
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  font-variant: all-petite-caps;
+  padding-bottom: 5px;
+}
+
+.avatar{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 10px;
+  
+  img{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+.button-upload{
+  display: flex;
+  justify-content: center;
+  button{
+    margin-top: 0px;
+  }
+}

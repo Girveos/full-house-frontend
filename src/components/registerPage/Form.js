@@ -2,12 +2,14 @@
 import React from "react";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Input, Select, Checkbox, Modal } from "antd";
+import { Button, Input, Select, Checkbox, Modal, Upload, message } from "antd";
 import { UserOutlined, EyeTwoTone, EyeInvisibleOutlined, MailOutlined, SolutionOutlined, UserSwitchOutlined, EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import defaultAvatar from '../../assets/images/defaultFrank.png';
 import * as Yup from "yup";
 import './Form.scss';
+import { useNavigate } from 'react-router-dom';
 
 
 export const RegistrationForm = (props) => {
@@ -19,10 +21,12 @@ export const RegistrationForm = (props) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
     const [errorModalMessage, setErrorModalMessage] = useState('');
-
+    const [avatar, setAvatar] = useState(null);
     const [municipios, setMunicipios] = useState([]);
     const [paises, setPaises] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [userID, setuserID] = useState("");
+    const history = useNavigate();
 
     const handleDepartamentoChange = (value, { setFieldValue }) => {
         setFieldValue("department", value);
@@ -33,36 +37,41 @@ export const RegistrationForm = (props) => {
     };
 
 
-
     const handleRegistrationSubmit = async (values, { setSubmitting }) => {
         if (values.country !== 'Colombia') {
             values.department = '';
             values.municipality = '';
         }
+        
+        const formData = new FormData();
+        formData.append("firstname", values.Name);
+        formData.append("lastname", values.lastname);
+        formData.append("email", values.email);
+        formData.append("password", values.password);
+        formData.append("country", values.country);
+        formData.append("depto", values.department);
+        formData.append("municipality", values.municipality);
+        formData.append("state", values.statelocalitation);
+        formData.append("documentType", values.documentType);
+        formData.append("document", values.document);
+        if (avatar) {
+            formData.append("avatar", avatar, `${values.document}`);
+          }
+
         try {
+
             const response = await fetch("http://localhost:3001/api/v1/register", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    firstname: values.Name,
-                    lastname: values.lastname,
-                    email: values.email,
-                    password: values.password,
-                    country: values.country,
-                    depto: values.department,
-                    municipality: values.municipality,
-                    state: values.statelocalitation,
-                    documentType: values.documentType,
-                    document: values.document
-                }),
+                body: formData,
             });
+            const responseData = await response.json();
 
             if (response.ok) {
                 setIsModalVisible(true);
+
             } else {
-                const errorData = await response.json();
+                const errorData = await responseData;
+                console.log(errorData);
                 setErrorModalMessage(errorData.msg);
                 setIsErrorModalVisible(true);
             }
@@ -74,9 +83,7 @@ export const RegistrationForm = (props) => {
     };
 
     const handleModalOk = () => {
-        setIsModalVisible(false);
-    };
-    const handleModalCancel = () => {
+        history("/login")
         setIsModalVisible(false);
     };
 
@@ -211,14 +218,14 @@ export const RegistrationForm = (props) => {
 
     return (
         <Formik
-            initialValues={{ Name: "", lastname: "", email: "", password: "", documentType: "", document: "", country: "", confirmpassword: "", department: "", municipality: "", statelocalitation: "" }}
+            initialValues={{ Name: "", lastname: "", email: "", password: "", documentType: "", document: "", country: "", confirmpassword: "", department: "", municipality: "", statelocalitation: "", avatar: null, }}
             validationSchema={validationSchema}
             onSubmit={handleRegistrationSubmit}
             validateOnBlur={false}
             enableReinitialize={true}
         >
             {({ values, setFieldValue }) => (
-                <Form>
+                <Form enctype="multipart/form-data">
                     <div className="form-container">
                         <div className="column1">
                             <div className="form-group">
@@ -322,6 +329,27 @@ export const RegistrationForm = (props) => {
                                 />
                             </div>
                             <br />
+                            <div className="textAvatar">Seleccione un avatar</div>
+                            <div className="avatar">
+                                {avatar ? (
+                                    <img src={URL.createObjectURL(avatar)} alt="avatar" />
+                                ) : (
+                                    <img src={defaultAvatar} alt="avatar" />
+                                )}
+                            </div>
+                            <div className="button-upload">
+                                <Upload
+                                    customRequest={({ file, onSuccess }) => {
+                                        setAvatar(file);
+                                        onSuccess();
+                                    }}
+                                    showUploadList={false}
+                                >
+                                    <Button icon={<UserOutlined />} className="avatar-upload-btn">
+                                        Subir Avatar
+                                    </Button>
+                                </Upload>
+                            </div>
 
                         </div>
                         <div className="column2">
@@ -512,9 +540,9 @@ export const RegistrationForm = (props) => {
                         title="Registro Exitoso"
                         open={isModalVisible}
                         onOk={handleModalOk}
-                        onCancel={handleModalCancel}
+                        cancelButtonProps={{ style: { display: 'none' } }} 
                     >
-                        <p>Ya se encuentra registrado en FullHosue_Shoes</p>
+                        <p>Ya se encuentra registrado en FullHosue_Shoes, por favor, verifique su correo electrónico o mensaje el mensaje en su celular para activar su cuenta</p>
                     </Modal>
 
                         <Modal

@@ -39,7 +39,8 @@ html {
         cursor: pointer;
         margin-left: auto;
         margin-right: 10px;
-        @media (max-width: 650px){
+
+        @media (max-width: 650px) {
             font-size: small;
         }
     }
@@ -53,6 +54,30 @@ html {
     display: flex;
     flex-direction: row;
     height: 100%;
+
+    .contentuser {
+        margin-top: 10px;
+        width: 100%;
+        .avatar-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+
+            img {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                object-fit: cover;
+                object-position: center;
+
+                @media (max-width: 650px) {
+                    width: 100px;
+                    height: 100px;
+                }
+
+            }
+        }
+    }
 }
 
 .slidecontainer {
@@ -73,11 +98,13 @@ html {
             display: flex;
             flex-direction: row;
             align-items: flex-start;
-            :hover{
+
+            :hover {
                 cursor: pointer;
                 color: rgb(127, 127, 214);
             }
-            @media (max-width: 650px){
+
+            @media (max-width: 650px) {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -89,7 +116,8 @@ html {
             height: auto;
             margin: 5px;
         }
-        @media (max-width: 650px){
+
+        @media (max-width: 650px) {
             svg {
                 width: 20px;
                 height: auto;
@@ -97,22 +125,26 @@ html {
                 margin-left: auto;
             }
         }
-        .menu-option-text{
+
+        .menu-option-text {
             margin: 15px 10px;
-            @media (max-width: 650px){
+
+            @media (max-width: 650px) {
                 margin: 0px 5px 10px 5px;
-                    font-size: small;
+                font-size: small;
             }
         }
     }
 }
-.configuration-panel{
-    button{
+
+.configuration-panel {
+    button {
         background-color: rgb(233, 167, 167);
         font-weight: bold;
-        &:hover{
+
+        &:hover {
             background-color: red;
         }
     }
-    
+
 }

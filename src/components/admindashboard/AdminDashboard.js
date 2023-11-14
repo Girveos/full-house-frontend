@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/images/Frank1.png";
 import './AdminDashboard.scss';
-import { UserOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { UserOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UsergroupAddOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { jwtDecode } from 'jwt-decode';
 import { Table, Switch, Select, Button, Modal } from 'antd';
+const avatar = require.context('../../assets/avatar');
 
 
 const UserDashboard = () => {
@@ -13,10 +14,22 @@ const UserDashboard = () => {
     const [userData, setUserData] = useState({});
     const [usersData, setUsersData] = useState([]);
     const [successModalVisible, setSuccessModalVisible] = useState(false);
-
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [userToDeleteId, setUserToDeleteId] = useState(null);
+    const [updatedUsers, setUpdatedUsers] = useState([]);
+    const [userDocument, setuserDocument] = useState("");
+    const token = localStorage.getItem("accessToken");
+    const [pagination, setPagination] = useState({
+        pageSize: 5,
+        current: 1,
+        total: usersData.length,
+    });
+    const handleTableChange = (pagination) => {
+        setPagination(pagination);
+    };
+    const avatarURL = "";
     const { Option } = Select;
     const navigate = useNavigate();
-
 
     const toggleMenu = () => {
         setMenuVisible(!menuVisible);
@@ -85,8 +98,9 @@ const UserDashboard = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-
+        const decodedToken = jwtDecode(token);
+        const document = decodedToken.document
+        setuserDocument(document);
         if (selectedOption === 'Usuarios') {
             fetchUsers();
             generateColumns();
@@ -102,8 +116,59 @@ const UserDashboard = () => {
                 console.error('Error al decodificar el token:', error.message);
             }
         }
-    }, [selectedOption]);
 
+    }, [selectedOption, token]);
+
+    const showDeleteModal = (userId) => {
+        setUserToDeleteId(userId);
+        setDeleteModalVisible(true);
+    };
+
+    const handleDeleteUser = async (userId) => {
+        try {
+            showDeleteModal(userId);
+
+        } catch (error) {
+            console.error('Error en la solicitud:', error.message);
+        }
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/api/v1/user/${userToDeleteId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+            });
+
+            if (response.ok) {
+                fetchUsers();
+                setDeleteModalVisible(false);
+            } else {
+                console.error(`Error al eliminar el usuario con ID ${userToDeleteId}:`, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error.message);
+        }
+    };
+
+    const handleSwitchChange = (checked, record) => {
+        const updatedUser = { ...record, active: checked };
+        const updatedUsersCopy = [...updatedUsers, updatedUser];
+        setUpdatedUsers(updatedUsersCopy);
+
+        setUsersData(prevUsers => prevUsers.map(user => (user._id === record._id ? updatedUser : user)));
+    };
+
+    const handleSelectChange = (value, record) => {
+        const updatedUser = { ...record, role: value };
+        const updatedUsersCopy = [...updatedUsers, updatedUser];
+        setUpdatedUsers(updatedUsersCopy);
+
+        setUsersData(prevUsers => prevUsers.map(user => (user._id === record._id ? updatedUser : user)));
+    };
 
     const generateColumns = () => {
         if (usersData.length === 0) {
@@ -123,11 +188,24 @@ const UserDashboard = () => {
             "email"
         ];
 
-        return columnsToShow.map((key) => ({
+        const baseColumns = columnsToShow.map((key) => ({
             title: key.charAt(0).toUpperCase() + key.slice(1),
             dataIndex: key,
             key: key,
-        })).concat([
+        }));
+
+        const actionColumn = {
+            title: 'Acciones',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (text, record) => (
+                <Button type="danger" className='delete-button' onClick={() => handleDeleteUser(record._id)}>
+                    Eliminar
+                </Button>
+            ),
+        };
+
+        return baseColumns.concat([
             {
                 title: 'Active',
                 dataIndex: 'active',
@@ -137,6 +215,7 @@ const UserDashboard = () => {
                         onChange={(checked) => handleSwitchChange(checked, record)}
                     />
                 ),
+
             },
             {
                 title: 'Role',
@@ -151,69 +230,77 @@ const UserDashboard = () => {
                     </Select>
                 ),
             },
+            actionColumn,
         ]);
     };
 
 
-    const handleSwitchChange = (checked, record) => {
-        const updatedUsersData = usersData.map(user =>
-            user._id === record._id
-                ? { ...user, active: checked, originalActive: user.active }
-                : user
-        );
-    console.log(checked);
-        setUsersData(updatedUsersData);
-    console.log(updatedUsersData);
-    };
-    
-
-    const handleSelectChange = (value, record) => {
-        const updatedUsersData = usersData.map(user =>
-            user._id === record._id ? { ...user, role: value } : user
-        );
-
-        setUsersData(updatedUsersData);
-    };
-
-    const handleConfirmChanges = async () => {
+    const updateActiveUsers = async () => {
         try {
-            const updatedUsers = usersData.filter(({ originalActive, originalRole, ...rest }) => {
-                return rest.active !== originalActive || rest.role !== originalRole;
-            });
-    
-            const promises = updatedUsers.map(async ({ _id, active, role }) => {
+            const activePromises = updatedUsers.map(async ({ _id, active }) => {
+
+                console.log(typeof active);
+                console.log(active);
+
                 const response = await fetch(`http://localhost:3001/api/v1/user/${_id}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
                     },
-                    body: JSON.stringify({ active, role }),
+                    body: JSON.stringify({ active }),
                 });
-    
                 if (!response.ok) {
-                    console.error(`Error al actualizar el usuario con ID ${_id}:`, response.statusText);
-                }else{
-                    console.log(response);
+                    console.error(`Error al actualizar el usuario con ID ${_id} (active):`, response.statusText);
+                } else {
+                    console.log(`Usuario con ID ${_id} (active) actualizado exitosamente en la base de datos.${active}`);
+                    console.log("respuesta del back", response);
                 }
             });
-    
-            await Promise.all(promises);
-    
-            setUsersData(prevUsersData => prevUsersData.map(({ _id, originalActive, originalRole, ...rest }) => ({
-                _id,
-                active: originalActive,
-                role: originalRole,
-                ...rest,
-            })));
-            console.log(usersData);
-            setSuccessModalVisible(true);
+
+            await Promise.all(activePromises);
         } catch (error) {
-            console.error('Error en la solicitud:', error.message);
+            console.error('Error en la solicitud de actualización de active:', error.message);
         }
     };
-    
 
+    const updateRoleUsers = async () => {
+        try {
+            const rolePromises = updatedUsers.map(async ({ _id, role }) => {
+                const response = await fetch(`http://localhost:3001/api/v1/user/${_id}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                    body: JSON.stringify({ role }),
+                });
+
+                if (!response.ok) {
+                    console.error(`Error al actualizar el usuario con ID ${_id} (role):`, response.statusText);
+                } else {
+                    console.log(`Usuario con ID ${_id} (role) actualizado exitosamente en la base de datos.`);
+                }
+            });
+
+            await Promise.all(rolePromises);
+        } catch (error) {
+            console.error('Error en la solicitud de actualización de role:', error.message);
+        }
+    };
+
+    const handleConfirmChanges = async () => {
+        try {
+            await updateActiveUsers();
+            await updateRoleUsers();
+
+
+            setSuccessModalVisible(true);
+            setUpdatedUsers([]);
+        } catch (error) {
+            console.error('Error en la solicitud de cambios generales:', error.message);
+        }
+    };
 
     return (
         <div>
@@ -239,13 +326,19 @@ const UserDashboard = () => {
                 </div>
 
                 <div className='contentadmin'>
+                    {selectedOption === 'Perfil' && (
+                        <div className='avatar-container'>
+                            <img className="avatar-user" src={avatar.keys().includes(`./${userDocument}.png`) ? avatar(`./${userDocument}.png`) : require('../../assets/images/defaultFrank.png')} alt="Imagen de usuario" style={{ cursor: 'pointer' }} />
+                        </div>
+                    )}
                     {selectedOption === 'Usuarios' && (
                         <div className='content-users'>
                             <div>
                                 <h2>Lista de usuarios</h2>
                             </div>
                             <div className='table'>
-                                <Table dataSource={usersData} columns={generateColumns()} />
+                                <Table dataSource={usersData} columns={generateColumns()} pagination={pagination}
+                                    onChange={handleTableChange} />
                             </div>
                             <div className='button-confirm-changes'>
                                 <Button type="primary" onClick={handleConfirmChanges}>
@@ -262,6 +355,17 @@ const UserDashboard = () => {
                     onCancel={() => setSuccessModalVisible(false)}
                 >
                     Los usuarios han sido actualizados exitosamente.
+                </Modal>
+                <Modal
+                    title="Confirmar Eliminación"
+                    open={deleteModalVisible}
+                    onOk={handleConfirmDelete}
+                    onCancel={() => setDeleteModalVisible(false)}
+                    okText="Eliminar"
+                    cancelText="Cancelar"
+                >
+                    <p><ExclamationCircleOutlined style={{ color: '#faad14', marginRight: '8px' }} />
+                        ¿Estás seguro de que deseas eliminar este usuario?</p>
                 </Modal>
             </div>
         </div>

@@ -149,6 +149,39 @@ html {
         .ant-table-tbody>tr>td {
             border-bottom: 1px solid #ddd;
         }
+
+        .delete-button {
+            background-color: #d75353;
+
+            &:hover {
+                background-color: #ff0000;
+            }
+        }
+
+        .button-confirm-changes {
+            button {
+                background-color: black;
+            }
+        }
+    }
+
+    .avatar-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+
+            @media (max-width: 650px) {
+                width: 100px;
+                height: 100px;
+            }
+
+        }
     }
 
 }

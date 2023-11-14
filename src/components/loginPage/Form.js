@@ -12,10 +12,13 @@ import * as Yup from "yup";
 import './Form.scss'
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { useLocation } from 'react-router-dom';
+
 
 
 export const LoginForm = () => {
   const history = useNavigate();
+  const location = useLocation();
 
   let accessToken = null;
 
@@ -57,6 +60,22 @@ export const LoginForm = () => {
 
     setShowErrorMessage(false);
     setErrorMessage("");
+
+    const urlParams = new URLSearchParams(location.search);
+    const activationToken = urlParams.get('token');
+    if (activationToken) {
+      const decodedTokenVerify = jwtDecode(activationToken);
+
+      const activationResponse = await fetch(`http://localhost:3001/api/v1/user/activate-account/${decodedTokenVerify.user_id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+    } else {
+      console.log('No se encontró un token en la URL');
+    }
 
     try {
       const response = await fetch("http://localhost:3001/api/v1/login", {

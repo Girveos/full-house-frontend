@@ -12,6 +12,7 @@ import RegisterPage from './components/registerPage/RegisterPage';
 import AuthGuard from './AuthGuard';
 import UserDashboard from './components/userdashboard/UserDashboard.js';
 import AdminDashboard from './components/admindashboard/AdminDashboard.js';
+import  ChangePassword  from './components/changePassword/ChangePassword.js';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/terms" element={<TermsAndConditionsPage />} />
           <Route path="/LogIn" element={<LoginPage />} />
           <Route path="/SignUp" element={<RegisterPage />} />
+          <Route path="/ChangePassword" element={<ChangePassword />} />
           <Route
             path="/DashboardUserFullHouse"
             element={<AuthGuard requiredRole="user"><UserDashboard /></AuthGuard>}
