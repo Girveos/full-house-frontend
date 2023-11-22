@@ -180,9 +180,6 @@ const UserDashboard = () => {
             "firstname",
             "lastname",
             "country",
-            "depto",
-            "municipality",
-            "state",
             "documentType",
             "document",
             "email"

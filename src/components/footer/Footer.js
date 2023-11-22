@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState }from "react";
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import "./Footer.scss";
@@ -7,12 +7,23 @@ import IGicon from "../../assets/SVG/instagram-svgrepo-com.png";
 import TKicon from "../../assets/SVG/tiktok-svgrepo-com.png";
 import WPicon from "../../assets/SVG/whatsapp-svgrepo-com.png";
 import { useNavigate } from "react-router-dom";
+import MapComponent from '../mapa/MapComponent';
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [showMap, setshowMap] = useState(false);
+
+  const handleLocationIconClick = () => {
+    setshowMap(!showMap);
+  };
+  const handleCloseMap = () => {
+    setshowMap(false);
+  };
+
   return (
     <footer className="footer">
       <div className="footer-container">
+      {showMap && <MapComponent onClose={handleCloseMap}/>}
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={4}>
             <div className="direction-container">
@@ -27,6 +38,8 @@ const Footer = () => {
                     src={locationicon}
                     alt="Location Icon"
                     className="location-icon"
+                    style={{ cursor: 'pointer' }} 
+                    onClick={handleLocationIconClick}
                   />
                 </div>
               </div>

@@ -144,13 +144,11 @@ export const MenuReact = () => {
       }
     };
 
-    // Agrega eventos de escucha para el menú, el redimensionamiento de la ventana y el desplazamiento
     const menuToggle = document.getElementById("menu-toggle");
     menuToggle.addEventListener("click", handleMenuToggle);
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll);
 
-    // Asegúrate de eliminar los eventos de escucha cuando el componente se desmonte
     return () => {
       menuToggle.removeEventListener("click", handleMenuToggle);
       window.removeEventListener("resize", handleResize);
