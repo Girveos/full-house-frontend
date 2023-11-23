@@ -36,6 +36,7 @@ const UserDashboard = () => {
   const avatarURL = "";
   const { Option } = Select;
   const navigate = useNavigate();
+  const [newAvatar, setNewAvatar] = useState(null);
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -342,6 +343,12 @@ const UserDashboard = () => {
     }
   };
 
+  const handleAvatarChange = (file) => {
+    if (file) {
+      setNewAvatar(file);
+    }
+  };
+
   return (
     <div>
       <div className="headeradmin">
@@ -375,18 +382,34 @@ const UserDashboard = () => {
 
         <div className="contentadmin">
           {selectedOption === "Perfil" && (
-            <div className="avatar-container">
+            <div className='avatar-container'>
+            <div className="avatar-overlay">
+              <div className="text">Para cambiar, seleccione la imagen actual</div>
+            </div>
+          <label htmlFor="avatarInput" className="avatar-label">
+          
+            {newAvatar ? (
+              <img className="avatar-user" src={URL.createObjectURL(newAvatar)} alt="Vista previa del avatar" />
+            ) : (
               <img
                 className="avatar-user"
-                src={
-                  avatar.keys().includes(`./${userDocument}.png`)
-                    ? avatar(`./${userDocument}.png`)
-                    : require("../../assets/images/defaultFrank.png")
-                }
+                src={avatar.keys().includes(`./${userDocument}.png`) ? avatar(`./${userDocument}.png`) : require('../../assets/images/defaultFrank.png')}
                 alt="Imagen de usuario"
-                style={{ cursor: "pointer" }}
               />
-            </div>
+            )}
+            
+          </label>
+          <input
+            id="avatarInput"
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleAvatarChange(e.target.files[0])}
+            style={{ display: 'none' }}
+          />
+          <Button type="primary" onClick={handleAvatarChange} disabled={!newAvatar}>
+            Actualizar Avatar
+          </Button>
+        </div>
           )}
           {selectedOption === "Usuarios" && (
             <div className="content-users">

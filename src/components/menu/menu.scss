@@ -170,6 +170,9 @@ body {
   .slider-container {
     .slider-main {
       .slider-content {
+        img{
+          background-color: #ffffff;
+        }
         .slider-title {
           color: black;
 
@@ -287,7 +290,7 @@ body {
   /* height: auto; */
   display: flow-root;
   height: auto;
-  background: white; /* Color de fondo para Products */
+  background: linear-gradient(180deg, white, rgb(187, 187, 187));; /* Color de fondo para Products */
   color: black; /* Color del texto en la sección */
   padding: 20px; /* Espaciado interno */
 
@@ -332,7 +335,7 @@ body {
 
 /* Estilo para la sección Contact */
 .contact1 {
-  background: white; /* Color de fondo para Contact */
+  background: linear-gradient(180deg, rgb(187, 187, 187), black); /* Color de fondo para Contact */
   color: black; /* Color del texto en la sección */
   padding: 20px; /* Espaciado interno */
   padding-bottom: 10%;
