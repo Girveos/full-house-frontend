@@ -25,6 +25,9 @@ html {
         color: white;
         font-size: 20px;
         cursor: pointer;
+        @media (max-width: 650px){
+            display: none;
+        }
     }
 
     .menu-button:hover {
@@ -44,6 +47,7 @@ html {
             font-size: small;
         }
     }
+    
 
     .logout-button:hover {
         color: rgb(127, 127, 214);
@@ -110,6 +114,9 @@ html {
                 align-items: center;
             }
         }
+        .icon.selected {
+            color: rgb(127, 127, 214);
+          }
 
         svg {
             width: 35px;
@@ -138,6 +145,9 @@ html {
 }
 
 .configuration-panel {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     button {
         background-color: rgb(233, 167, 167);
         font-weight: bold;

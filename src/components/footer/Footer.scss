@@ -18,8 +18,8 @@
       font-size: large;
       .direction {
         display: flex;
-        flex-direction: row-reverse;
-        justify-content: start;
+        flex-direction: row;
+        justify-content: flex-start;
         h5 {
           margin-top: auto;
           color: rgb(156, 158, 160);

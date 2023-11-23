@@ -54,9 +54,9 @@ export const RegistrationForm = (props) => {
         formData.append("state", values.statelocalitation);
         formData.append("documentType", values.documentType);
         formData.append("document", values.document);
-        if (avatar) {
+        /* if (avatar) {
             formData.append("avatar", avatar, `${values.document}`);
-          }
+          } */
 
         try {
 
@@ -329,7 +329,7 @@ export const RegistrationForm = (props) => {
                                 />
                             </div>
                             <br />
-                            <div className="textAvatar">Seleccione un avatar</div>
+                            {/* <div className="textAvatar">Seleccione un avatar</div>
                             <div className="avatar">
                                 {avatar ? (
                                     <img src={URL.createObjectURL(avatar)} alt="avatar" />
@@ -349,7 +349,7 @@ export const RegistrationForm = (props) => {
                                         Subir Avatar
                                     </Button>
                                 </Upload>
-                            </div>
+                            </div> */}
 
                         </div>
                         <div className="column2">

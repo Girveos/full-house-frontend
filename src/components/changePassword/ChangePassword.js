@@ -25,7 +25,7 @@ const ChangePassword = () => {
         <img src={FotoFrank} alt="Logo" className='full-house-logo' />
         </div>
         <div className='container-principal'>
-      <div><h2>Cambiar Contraseña</h2></div>
+      <div><h2>Cambia tu contraseña</h2></div>
       <div>
       <Form form={form} onFinish={handleSubmit}>
         <Form.Item

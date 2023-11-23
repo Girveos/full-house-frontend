@@ -73,8 +73,6 @@ export const LoginForm = () => {
         },
       });
 
-    } else {
-      console.log('No se encontró un token en la URL');
     }
 
     try {

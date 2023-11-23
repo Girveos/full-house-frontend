@@ -410,7 +410,7 @@ body {
     }
     .button-fav-group {
       display: flex;
-      justify-content: end;
+      justify-content: flex-end;
       position: relative;
       .fab-button {
         margin: 5px;

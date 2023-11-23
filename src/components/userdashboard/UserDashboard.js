@@ -62,7 +62,7 @@ const UserDashboard = () => {
     }
     if (successModalVisible) {
       Modal.success({
-        title: 'Cuenta eliminada con éxito',
+        title: 'Cuenta cancelada con éxito',
         content: 'Gracias por usar nuestro servicio. Serás redirigido a la página principal.',
         onOk() {
           setSuccessModalVisible(false);
@@ -113,7 +113,7 @@ const UserDashboard = () => {
         <div className='slidecontainer'>
           <div className="icon-container">
             {menuOptions.map((option) => (
-              <div className='icon' key={option.label} onClick={() => handleMenuClick(option.label)}>
+              <div className={`icon ${selectedOption === option.label ? 'selected' : ''}`} key={option.label} onClick={() => handleMenuClick(option.label)}>
                 {option.icon}
                 {menuVisible && <span className='menu-option-text'>{option.label}</span>}
               </div>

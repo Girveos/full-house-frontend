@@ -25,6 +25,9 @@ html {
         color: white;
         font-size: 20px;
         cursor: pointer;
+        @media (max-width: 650px){
+            display: none;
+        }
     }
 
     .menu-button:hover {
@@ -86,6 +89,9 @@ html {
                 align-items: center;
             }
         }
+        .iconadmin.selected {
+            color: rgb(127, 127, 214);
+          }
 
         svg {
             width: 35px;
@@ -125,30 +131,32 @@ html {
         align-items: center;
         margin: 0% 5% 0% 5%;
 
+
         .table {
             margin-top: 20px;
+            overflow-x: auto;
             width: 100%;
         }
 
         .ant-table-responsive {
             overflow-x: auto;
         }
-
+        
         .ant-spin-container {
             width: 100%;
         }
-
-        .ant-table {
-            border: 1px solid #ddd;
-        }
-
+        
+        
         .ant-table-thead>tr>th {
             background-color: #f0f0f0;
+            padding: 5px;
         }
-
+        
         .ant-table-tbody>tr>td {
             border-bottom: 1px solid #ddd;
+            padding: 5px;
         }
+        
 
         .delete-button {
             background-color: #d75353;
@@ -159,6 +167,7 @@ html {
         }
 
         .button-confirm-changes {
+            padding-top: 20px;
             button {
                 background-color: black;
             }
