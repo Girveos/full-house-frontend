@@ -8,6 +8,7 @@ import TKicon from "../../assets/SVG/tiktok-svgrepo-com.png";
 import WPicon from "../../assets/SVG/whatsapp-svgrepo-com.png";
 import { useNavigate } from "react-router-dom";
 import MapComponent from '../mapa/MapComponent';
+import logo from "../../assets/images/Frank1.png";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Footer = () => {
       <div className="footer-container">
       {showMap && <MapComponent onClose={handleCloseMap}/>}
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={3}>
             <div className="direction-container">
               <h2>Ubicación</h2>
               <div className="direction">
@@ -45,9 +46,10 @@ const Footer = () => {
               </div>
             </div>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={3}>
             <div className="social-container">
               <h2>Redes sociales</h2>
+              <div className="icons-social">
               <ul id="social-list">
                 <li>
                   <a
@@ -55,30 +57,33 @@ const Footer = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Instagram
+                    <img src={IGicon} alt="Instagram Icon" className="IG-icon" />
                   </a>
-                  <img src={IGicon} alt="Instagram Icon" className="IG-icon" />
+                  
                 </li>
                 <li>
-                  <a href="https://www.tiktok.com/@fullhouse_shoes?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">Tik Tok</a>
-                  <img src={TKicon} alt="Tik Tok Icon" className="TK-icon" />
+                  <a href="https://www.tiktok.com/@fullhouse_shoes?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer"><img src={TKicon} alt="Tik Tok Icon" className="TK-icon" /></a>
+                  
                 </li>
                 <li>
                   <a
-                    href="https://l.instagram.com/?u=https%3A%2F%2Fwa.link%2F2mtkwp&e=AT3Hqj1-Fn4RixjbyzV0xhcm3rfdvxNhUx5IO2Xrp-INatXUdBbmKkxCuMCEfjBloLUwdfg8mKcy2tSuu0MykiCIakLysdS7hb7gNg"
+                    href="https://wa.link/2mtkwp"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    WhatsApp
+           <img src={WPicon} alt="WhatsApp Icon" className="WP-icon" />
                   </a>
-                  <img src={WPicon} alt="WhatsApp Icon" className="WP-icon" />
+                  
                 </li>
               </ul>
+              </div>
+             
             </div>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={3}>
             <div className="privacy-container">
               <h2>Política y privacidad de datos</h2>
+              <div className="button-privacy">
               <Button
                 variant="contained"
                 className="button-politics"
@@ -86,9 +91,22 @@ const Footer = () => {
               >
                 ¡Conozca nuestras políticas!
               </Button>
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={12} md={3}>
+            <div className="hours-container">
+              <h2>Contacto</h2>
+              <p>Correo: fullhouse.shoes721@gmail.com</p>
+              <p>Celular: 314 720 1104</p>
+              <h4>Horarios de atención</h4>
+              <p>Lunes a Viernes: 9:00 AM - 6:00 PM</p>
+              <p>Sábado: 10:00 AM - 2:00 PM</p>
             </div>
           </Grid>
         </Grid>
+        <div className="logo"><img className="uamLogo" src={logo} alt="Logo UAM" /></div>
+        
       </div>
     </footer>
   );
