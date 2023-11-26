@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import Button from "@mui/material/Button";
+import logo from "../../assets/images/Frank1.png";
+import { useNavigate } from "react-router-dom";
 import './terms.scss';
 
-function TermsAndConditionsPage() {
+function TermsAndConditionsPage() { 
+  const navigate = useNavigate(); 
   const initialSections  = [
     { id: 1, title: 'Política de Privacidad', content: `  
     <p>Última actualización: 01 de noviembre de 2023</p>
@@ -197,6 +201,23 @@ function TermsAndConditionsPage() {
   };
 
   return (
+    <div>
+    <div className="menu">
+        <img className="uamLogo" src={logo} alt="Logo UAM" />
+        <Button
+          variant="contained"
+          className="button-login"
+          onClick={() =>
+            navigate(
+              localStorage.getItem("accessToken")
+                ? "/DashboardUserFullHouse"
+                : "/LogIn"
+            )
+          }
+        >
+          {localStorage.getItem("accessToken") ? "Perfil" : "Iniciar sesión"}
+        </Button>
+      </div>
     <div className='body-terms'>
       <div className="section-buttons">
         {sections.map((section) => (
@@ -213,6 +234,7 @@ function TermsAndConditionsPage() {
         <h2>{activeSection.title}</h2>
         <div dangerouslySetInnerHTML={{ __html: activeSection.content }} />
       </div>
+    </div>
     </div>
   );
 }

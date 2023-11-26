@@ -51,6 +51,16 @@ html {
   .logout-button:hover {
     color: rgb(127, 127, 214);
   }
+
+  .home{
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-left: 20px;
+      margin-right: 10px;
+  }
 }
 
 .body-container {

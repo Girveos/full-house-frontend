@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/images/Frank1.png";
 import './UserDashboard.scss';
-import { UserOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { UserOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ExclamationCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { jwtDecode } from 'jwt-decode';
 import { Button, Modal } from 'antd';
 import { destroyAccount } from '../../api';
+import Pqrsf from "../PQRSF/Pqrsf";
 const avatar = require.context('../../assets/avatar');
 
 
@@ -39,7 +40,8 @@ const UserDashboard = () => {
 
   const menuOptions = [
     { label: 'Perfil', icon: <UserOutlined /> },
-    { label: 'Configuración', icon: <SettingOutlined /> }
+    { label: 'Configuración', icon: <SettingOutlined /> },
+    { label: 'PQRSF', icon: <QuestionCircleOutlined /> }
   ];
 
 
@@ -103,6 +105,9 @@ const UserDashboard = () => {
       setNewAvatar(file);
     }
   };
+  const handleHomeClick = () => {
+    navigate("/");
+  };
 
   return (
     <div>
@@ -110,6 +115,9 @@ const UserDashboard = () => {
         <img className="uamLogo" src={logo} alt="Logo UAM" />
         <button className="menu-button" onClick={toggleMenu}>
           {menuVisible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        </button>
+        <button className="home" onClick={handleHomeClick}>
+          Inicio
         </button>
         <button className="logout-button" onClick={handleLogout}>
           Cerrar Sesión
@@ -165,6 +173,9 @@ const UserDashboard = () => {
                 Cancelar Cuenta
               </Button>
             </div>
+          )}
+          {selectedOption === 'PQRSF' && (
+            <Pqrsf/>
           )}
         </div>
       </div>

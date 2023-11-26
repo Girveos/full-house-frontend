@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Fab from '@mui/material/Fab';
+import Fab from "@mui/material/Fab";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 import "./menu.scss";
 import avatar from "../../assets/images/avatar.png";
 import logo from "../../assets/images/Frank1.png";
@@ -13,9 +15,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { images } from "../../assets";
-import ShoppingCar from "../shoppingCar/ShoppingCar"
+import ShoppingCar from "../shoppingCar/ShoppingCar";
 import Footer from "../footer/Footer";
-import Favorites from "../favorites/Favorites"
+import Favorites from "../favorites/Favorites";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -24,7 +26,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import LoginPage from "../loginPage/LoginPage";
-
 
 const style = {
   position: "absolute",
@@ -43,28 +44,32 @@ const posts = [
     _id: "1",
     title: "Air Jordan SB",
     subtitle: "¡Lo último de moda!",
-    Description: "¡Los Air Jordan SB combinan la elegancia de los Air Jordan con la funcionalidad de los Nike SB. Diseñados para los amantes del skate y el baloncesto, estos tenis ofrecen un rendimiento superior y un estilo inigualable!",
+    Description:
+      "¡Los Air Jordan SB combinan la elegancia de los Air Jordan con la funcionalidad de los Nike SB. Diseñados para los amantes del skate y el baloncesto, estos tenis ofrecen un rendimiento superior y un estilo inigualable!",
     avatar: images.post1,
   },
   {
     _id: "2",
     title: "Nike SB Dunk Low",
     subtitle: "♥♥ Para que disfrutes San Valentin ♥♥",
-    Description: "¡Descubre el estilo clásico reinventado con los Nike SB Dunk Low. Con su diseño atemporal y comodidad inigualable, estos tenis son la elección perfecta para expresar tu individualidad y tu amor por el skateboarding!",
+    Description:
+      "¡Descubre el estilo clásico reinventado con los Nike SB Dunk Low. Con su diseño atemporal y comodidad inigualable, estos tenis son la elección perfecta para expresar tu individualidad y tu amor por el skateboarding!",
     avatar: images.post2,
   },
   {
     _id: "3",
     title: "Adidas Forum Bad Bunny",
     subtitle: "¡Colaboración de Adidas con BaddBunny!",
-    Description: "¡Los Adidas Forum Bad Bunny son un tributo al icónico artista y a su estilo inconfundible. Estos tenis combinan a la perfección la herencia clásica de Adidas con el espíritu creativo de Bad Bunny. Perfectos para aquellos que buscan destacar en la multitud!",
+    Description:
+      "¡Los Adidas Forum Bad Bunny son un tributo al icónico artista y a su estilo inconfundible. Estos tenis combinan a la perfección la herencia clásica de Adidas con el espíritu creativo de Bad Bunny. Perfectos para aquellos que buscan destacar en la multitud!",
     avatar: images.post4,
   },
   {
     _id: "4",
     title: "Jordan Retro Travis Scott Purple",
     subtitle: "¡Tuyos si eres alguien exclusivo!",
-    Description: "¡Los Jordan 4 Retro Travis Scott Purple son una obra maestra de la colaboración entre Jordan Brand y el famoso rapero Travis Scott. Estos tenis destacan por su diseño único y colores vibrantes que te harán destacar en cualquier ocasión!",
+    Description:
+      "¡Los Jordan 4 Retro Travis Scott Purple son una obra maestra de la colaboración entre Jordan Brand y el famoso rapero Travis Scott. Estos tenis destacan por su diseño único y colores vibrantes que te harán destacar en cualquier ocasión!",
     avatar: images.post3,
   },
 ];
@@ -79,33 +84,53 @@ export const MenuReact = () => {
     setSelectedPost(post);
     setOpen(true);
   };
-
+  const [showAlertModal, setShowAlertModal] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const handleAlertModalOpen = () => {
+    setShowAlertModal(true);
+  };
+
+  const handleAlertModalClose = () => {
+    setShowAlertModal(false);
+  };
   const addToCart = (product) => {
-    setCartItems((prevCartItems) => {
-      const exists = prevCartItems.some((item) => item._id === product._id);
-      if (!exists) {
-        const updatedCart = [...prevCartItems, product];
-        console.log("Carrito de compras:", updatedCart);
-        return updatedCart;
-      }
-      return prevCartItems;
-    });
+    if (!localStorage.getItem("token")) {
+      handleAlertModalOpen();
+    } else {
+      setCartItems((prevCartItems) => {
+        const exists = prevCartItems.some((item) => item._id === product._id);
+        if (!exists) {
+          const updatedCart = [...prevCartItems, product];
+          return updatedCart;
+        }
+        return prevCartItems;
+      });
+    }
   };
 
   const [likedProducts, setLikedProducts] = useState([]);
   const addLikedProduct = (product) => {
-    setLikedProducts((prevLikedProducts) => {
-      const exists = prevLikedProducts.some((item) => item._id === product._id);
-      if (!exists) {
-        const updatedLikedProducts = [...prevLikedProducts, product];
-        console.log("Productos que les gustan:", updatedLikedProducts);
-        return updatedLikedProducts;
-      }
-      return prevLikedProducts;
-    });
+    if (!localStorage.getItem("token")) {
+      handleAlertModalOpen();
+    } else {
+      setLikedProducts((prevLikedProducts) => {
+        const exists = prevLikedProducts.some(
+          (item) => item._id === product._id
+        );
+        if (!exists) {
+          const updatedLikedProducts = [...prevLikedProducts, product];
+          return updatedLikedProducts;
+        }
+        return prevLikedProducts;
+      });
+    }
   };
-  
+  const handleLogin = () => {
+    navigate("/LogIn");
+  };
+  const handleCancel = () => {
+    setShowAlertModal(false);
+  };
 
   const handleClose = () => setOpen(false);
   /* const [showAdditionalCards, setShowAdditionalCards] = useState(false); */
@@ -162,6 +187,7 @@ export const MenuReact = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+
   return (
     <div className="container">
       {/* Sección de iconos que se mostrará al desplazarse hacia abajo */}
@@ -197,9 +223,23 @@ export const MenuReact = () => {
             <a href="#contact1">Carrito de compra</a>
           </li>
         </ul>
-        <Button variant="contained" className="button-login" onClick={() => navigate("/LogIn")}>Iniciar sesión</Button>
+        <Button
+          variant="contained"
+          className="button-login"
+          onClick={() =>
+            navigate(
+              localStorage.getItem("accessToken")
+                ? "/DashboardUserFullHouse"
+                : "/LogIn"
+            )
+          }
+        >
+          {localStorage.getItem("accessToken") ? "Perfil" : "Iniciar sesión"}
+        </Button>
       </div>
-
+      <div className="bienvenida">
+        <h2>FullHouse Shoes</h2>
+      </div>
       <div className="flex1" id="flex1">
         <div className="slider-container">
           <div className="slider-main">
@@ -214,10 +254,13 @@ export const MenuReact = () => {
                     <div className="slider-subtitle">
                       <h3>{post.subtitle}</h3>
                     </div>
-                    <Button className="button-mas-info" onClick={() => handleOpen(post._id)}>
+                    <Button
+                      className="button-mas-info"
+                      onClick={() => handleOpen(post._id)}
+                    >
                       ¡Más información!
                     </Button>
-                  </div>  
+                  </div>
                 ))
               ) : (
                 <p>No hay servicios</p>
@@ -226,6 +269,50 @@ export const MenuReact = () => {
           </div>
         </div>
       </div>
+      <Modal
+        open={showAlertModal}
+        onClose={handleAlertModalClose}
+        aria-labelledby="alert-modal-title"
+        aria-describedby="alert-modal-description"
+        className="modal-iniciar"
+      >
+        <Box
+          className="box-style"
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 300,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            p: 4,
+          }}
+        >
+          <Alert
+            severity="warning"
+            icon={<span className="MuiAlert-icon">&#9888;</span>}
+          >
+            <AlertTitle>¡Alerta!</AlertTitle>
+            Debes iniciar sesión para continuar.
+          </Alert>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+            <div className="button-container">
+              <Button
+                className="VolverButton"
+                onClick={handleCancel}
+                variant="contained"
+                color="primary"
+              >
+                Volver
+              </Button>
+              <Button onClick={handleLogin} variant="contained" color="primary">
+                Iniciar sesión
+              </Button>
+            </div>
+          </Box>
+        </Box>
+      </Modal>
 
       <div className="products1" id="products1">
         <Favorites favoritesItems={likedProducts} />
@@ -234,8 +321,9 @@ export const MenuReact = () => {
         <ShoppingCar cartItems={cartItems} />
       </div>
       <div className="footer">
-      <Footer/>
+        <Footer />
       </div>
+
       <Modal
         className="modal-style"
         open={open}
@@ -246,40 +334,52 @@ export const MenuReact = () => {
         <Box className="box-style">
           {selectedPost && (
             <>
-            <Typography id="modal-modal-title" variant="h6" component="h2" className="title-modal">
+              <Typography
+                id="modal-modal-title"
+                variant="h6"
+                component="h2"
+                className="title-modal"
+              >
                 {selectedPost.title}
               </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }} className="title-modal">
+              <Typography
+                id="modal-modal-description"
+                sx={{ mt: 2 }}
+                className="title-modal"
+              >
                 {selectedPost.subtitle}
               </Typography>
-              {console.log(selectedPost)}
               <img
                 src={selectedPost.avatar}
                 alt={selectedPost.title}
                 style={{ maxWidth: "100%", height: "auto" }}
               />
-              
-              <Typography id="modal-modal-description" sx={{ mt: 2 }} className="title-modal">
+
+              <Typography
+                id="modal-modal-description"
+                sx={{ mt: 2 }}
+                className="title-modal"
+              >
                 {selectedPost.Description}
               </Typography>
               <div className="button-fav-group">
-                            <Fab
-                              className="fab-button"
-                              color="primary"
-                              aria-label="Favorite icon"
-                              onClick={() => addLikedProduct (selectedPost)}
-                            >
-                              <FavoriteIcon />
-                            </Fab>
-                            <Fab
-                              className="shop-button"
-                              color="seconday"
-                              aria-label="Favorite icon"
-                              onClick={() => addToCart(selectedPost)}
-                            >
-                              <AddShoppingCartIcon />
-                            </Fab>
-                          </div>
+                <Fab
+                  className="fab-button"
+                  color="primary"
+                  aria-label="Favorite icon"
+                  onClick={() => addLikedProduct(selectedPost)}
+                >
+                  <FavoriteIcon />
+                </Fab>
+                <Fab
+                  className="shop-button"
+                  color="seconday"
+                  aria-label="Favorite icon"
+                  onClick={() => addToCart(selectedPost)}
+                >
+                  <AddShoppingCartIcon />
+                </Fab>
+              </div>
             </>
           )}
         </Box>

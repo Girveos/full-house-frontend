@@ -2,9 +2,11 @@ body {
     margin: 0;
     padding: 0;
     background: white;
+    
 }
 .titles{
     color: white;
+    border-radius: 5px;
 }
 h2 { 
     color: #000000; 
@@ -22,10 +24,12 @@ li{
     color: #000000; 
 }
 .section-buttons {
+    margin-top: 10px;
     display: flex;
     gap: 10px;
     background-color: rgb(0, 0, 0);
     width: 100%;
+    border-radius: 10px 10px 0px 0px;
     button {
         background: none;
         border: none;
@@ -41,6 +45,7 @@ li{
     }
 }
 
+
 @media (max-width: 850px) {
     .section-buttons {
         display: flex;
@@ -48,6 +53,7 @@ li{
         width: 100%;
         gap: 10px;
         background-color: rgb(0, 0, 0);
+        border-radius: 10px 10px 0px 0px;
         button {
             background: none;
             border: none;
@@ -64,9 +70,14 @@ li{
     }
   }
 
-
+.body-terms{
+    margin: 20px;
+    border-radius: 5px;
+}
 .section-content {
     padding: 10px;
     font-family: Arial, Helvetica, sans-serif;
+    background-color: #b5b5b5;
+    border-radius: 0px 0px 10px 10px;
 }
   
