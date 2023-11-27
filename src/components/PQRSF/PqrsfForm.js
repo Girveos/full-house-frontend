@@ -72,7 +72,7 @@ export const PqrsfForm = () => {
     console.log(quill.getContents());
 
     axios
-      .post("http://localhost:5000/api/v1/help/pqrsf", formData)
+      .post("http://localhost:3001/api/v1/PQRSF", formData)
       .then((response) => {
         if (response.status === 201) {
           setShowSuccessMessage(true);

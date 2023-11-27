@@ -61,7 +61,7 @@ html {
 
 .slidecontaineradmin {
     background-color: rgb(0, 0, 0);
-    height: 93.1vh;
+    height: 100vh;
 
     h2 {
         color: white;
@@ -218,7 +218,8 @@ html {
     .avatar-container {
         display: flex;
         justify-content: center;
-        margin-top: 10px;
+        height: 100%;
+        overflow: auto;
         img {
             width: 200px;
             height: 200px;
@@ -231,6 +232,34 @@ html {
                 height: 100px;
             }
 
+        }
+    }
+    .category-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .title-category{
+            font-variant: all-petite-caps;
+        }
+    }
+    .product-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .title-product{
+            font-variant: all-petite-caps;
+        }
+        
+    }
+    .button-category-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        justify-content: center;
+        align-items: center;
+        margin-top:10px;
+        .añadir-button{
+            background-color: #7ec57e;
         }
     }
 

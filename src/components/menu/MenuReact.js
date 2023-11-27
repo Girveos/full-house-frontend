@@ -25,6 +25,7 @@ import {
   faMapMarkerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import LoginPage from "../loginPage/LoginPage";
 
 const style = {
@@ -142,6 +143,16 @@ export const MenuReact = () => {
    */
 
   useEffect(() => {
+
+    if(localStorage.getItem("accessToken")){
+      const accessToken = localStorage.getItem("accessToken");
+      const decodedToken = jwtDecode(accessToken);
+      const roleUser = decodedToken.role;
+    if (roleUser === "admin") {
+      navigate( "/DashboardAdminFullHouse");
+    }
+    }
+
     const handleMenuToggle = () => {
       const menuList = document.getElementById("menu-list");
       menuList.classList.toggle("show-menu");
@@ -226,13 +237,19 @@ export const MenuReact = () => {
         <Button
           variant="contained"
           className="button-login"
-          onClick={() =>
-            navigate(
-              localStorage.getItem("accessToken")
-                ? "/DashboardUserFullHouse"
-                : "/LogIn"
-            )
-          }
+          onClick={() => {
+            if(localStorage.getItem("accessToken")){
+              const accessToken = localStorage.getItem("accessToken");
+              const decodedToken = jwtDecode(accessToken);
+              const roleUser = decodedToken.role;
+            if (roleUser) {
+              navigate(roleUser === "admin" ? "/DashboardAdminFullHouse" : "/DashboardUserFullHouse");
+            }
+            }
+             else {
+              navigate("/LogIn");
+            }
+          }}
         >
           {localStorage.getItem("accessToken") ? "Perfil" : "Iniciar sesión"}
         </Button>

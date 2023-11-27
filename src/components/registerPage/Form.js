@@ -42,33 +42,33 @@ export const RegistrationForm = (props) => {
             values.department = '';
             values.municipality = '';
         }
-        
-        const formData = new FormData();
-        formData.append("firstname", values.Name);
-        formData.append("lastname", values.lastname);
-        formData.append("email", values.email);
-        formData.append("password", values.password);
-        formData.append("country", values.country);
-        formData.append("depto", values.department);
-        formData.append("municipality", values.municipality);
-        formData.append("state", values.statelocalitation);
-        formData.append("documentType", values.documentType);
-        formData.append("document", values.document);
-        /* if (avatar) {
-            formData.append("avatar", avatar, `${values.document}`);
-          } */
-
+    
+        const requestBody = {
+            firstname: values.Name,
+            lastname: values.lastname,
+            email: values.email,
+            password: values.password,
+            country: values.country,
+            depto: values.department,
+            municipality: values.municipality,
+            state: values.statelocalitation,
+            documentType: values.documentType,
+            document: values.document,
+        };
+    
         try {
-
             const response = await fetch("http://localhost:3001/api/v1/register", {
                 method: "POST",
-                body: formData,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
             });
+    
             const responseData = await response.json();
-
+    
             if (response.ok) {
                 setIsModalVisible(true);
-
             } else {
                 const errorData = await responseData;
                 console.log(errorData);
@@ -79,8 +79,9 @@ export const RegistrationForm = (props) => {
             console.error("Error en la solicitud:", error.message);
         } finally {
             setSubmitting(false);
-        }
+        };
     };
+    
 
     const handleModalOk = () => {
         history("/login")
