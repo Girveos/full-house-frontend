@@ -200,13 +200,23 @@ function TermsAndConditionsPage() {
     setActiveSection(section);
   };
 
+  const handleHomeClick = () => {
+    navigate("/");
+  };
+
   return (
     <div>
     <div className="menu">
-        <img className="uamLogo" src={logo} alt="Logo UAM" />
+      <div className='logo-boton'>
+      <img className="uamLogo" src={logo} alt="Logo UAM" />
+        <button className="home" onClick={handleHomeClick}>
+          Inicio
+        </button>
+      </div>
         <Button
           variant="contained"
           className="button-login"
+          style={{ backgroundColor: 'gray', color: 'white' }}
           onClick={() =>
             navigate(
               localStorage.getItem("accessToken")

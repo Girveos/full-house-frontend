@@ -3,9 +3,6 @@ import React from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import nicki from "../../assets/images/nicki.gif";
-import peso from "../../assets/images/peso.gif";
-import romeo from "../../assets/images/romeo.gif";
 
 
 function YoutubePage() {
@@ -21,7 +18,7 @@ function YoutubePage() {
   return (
     <div className="containers">
       <div className="content">
-        <Slider {...sliderSettings}>
+{/*         <Slider {...sliderSettings}>
           <div>
           <img src={nicki} class="slidePic" />
           </div>
@@ -31,7 +28,7 @@ function YoutubePage() {
           <div>
           <img src={romeo} class="slidePic"/>
           </div>
-        </Slider>
+        </Slider> */}
       </div>
       </div>
   );

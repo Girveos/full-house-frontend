@@ -661,9 +661,6 @@ const handleCategoryFormChange = (field, value) => {
             <div className="avatar-container">
               <h1>¡Bienvenido!</h1>
               <div className="avatar-overlay">
-                <div className="text">
-                  Para cambiar su foto de perfil, seleccione la imagen actual
-                </div>
               </div>
               <label htmlFor="avatarInput" className="avatar-label">
                 {newAvatar ? (
@@ -691,13 +688,6 @@ const handleCategoryFormChange = (field, value) => {
                 onChange={(e) => handleAvatarChange(e.target.files[0])}
                 style={{ display: "none" }}
               />
-              <Button
-                type="primary"
-                onClick={handleAvatarChange}
-                disabled={!newAvatar}
-              >
-                Actualizar Avatar
-              </Button>
 
               <h1> Información </h1>
 

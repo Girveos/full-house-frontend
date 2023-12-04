@@ -3,9 +3,7 @@ import React from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import don from "../../assets/images/don.gif";
-import eladio from "../../assets/images/eladio.gif";
-import emilia from "../../assets/images/emilia.gif";
+
 
 
 function WhatsAppPage() {
@@ -21,7 +19,7 @@ function WhatsAppPage() {
   return (
     <div className="containers">
       <div className="content">
-        <Slider {...sliderSettings}>
+{/*         <Slider {...sliderSettings}>
           <div>
           <img src={emilia} class="slidePic" />
           </div>
@@ -31,7 +29,7 @@ function WhatsAppPage() {
           <div>
           <img src={don} class="slidePic"/>
           </div>
-        </Slider>
+        </Slider> */}
       </div>
       </div>
   );

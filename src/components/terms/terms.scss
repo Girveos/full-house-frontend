@@ -44,7 +44,19 @@ li{
         color: rgb(0, 0, 0);
     }
 }
+.logo-boton{
+    display: flex;
 
+}
+.home{
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-right: 10px;
+}
 
 @media (max-width: 850px) {
     .section-buttons {
@@ -77,7 +89,7 @@ li{
 .section-content {
     padding: 10px;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #b5b5b5;
+    background-color: #e3e3e3;
     border-radius: 0px 0px 10px 10px;
 }
   

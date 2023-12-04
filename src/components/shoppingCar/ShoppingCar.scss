@@ -1,29 +1,30 @@
-.title-shopping-car{
+.title-shopping-car {
     margin-left: 50px;
     font-variant: all-petite-caps;
 }
 
 .shopping-cart-card {
     display: flex;
-    flex-direction: row; 
-    align-items: center; 
-    gap: 16px; 
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
     margin-left: 50px;
     margin-bottom: 10px;
     font-variant: all-petite-caps;
     margin-right: 450px;
+
     .card-image {
-        flex: 0 0 auto; 
-        width: 200px; 
+        flex: 0 0 auto;
+        width: 200px;
     }
-    .title{
+    .title {
         font-size: 1.885rem;
     }
-    .description{
+    .description {
         font-size: 1.285rem;
     }
     .card-content {
-        flex: 1; 
+        flex: 1;
         background: linear-gradient(45deg, white, #ececec);
     }
     .css-46bh2p-MuiCardContent-root {
@@ -31,24 +32,26 @@
     }
 }
 
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiCard-root.shopping-cart-card.css-bhp9pd-MuiPaper-root-MuiCard-root {
+    overflow: visible;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 100px;
+}
+
 @media (max-width: 900px) {
     .shopping-cart-card {
         display: block;
-        flex-direction: column; 
-        align-items: center; 
-        gap: 16px; 
-        margin-left: 50px;
-        margin-bottom: 10px;
-        font-variant: all-petite-caps;
         width: fit-content;
-    
+
         .card-image {
-            flex: 0 0 auto; 
-            width: 200px; 
+            flex: 0 0 auto;
+            width: 200px;
         }
-    
+
         .card-content {
-            flex: 1; 
+            flex: 1;
             background: linear-gradient(45deg, white, #ececec);
         }
         .css-46bh2p-MuiCardContent-root {
@@ -57,7 +60,7 @@
     }
 }
 
-.no-shopping-car-message{
+.no-shopping-car-message {
     margin-left: 50px;
     font-variant: all-petite-caps;
     color: black;

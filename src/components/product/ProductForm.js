@@ -13,13 +13,13 @@ export const ProductForm = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const getCategories = async (token) => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/category/",
+          "http://localhost:3001/api/v1/category/",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -88,7 +88,7 @@ export const ProductForm = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .post("http://localhost:5000/api/v1/products", formData, {
+      .post("http://localhost:3001/api/v1/products", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

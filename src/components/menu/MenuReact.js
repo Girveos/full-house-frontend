@@ -27,6 +27,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import LoginPage from "../loginPage/LoginPage";
+import SliderProducts from "../sliderProducts/SliderProducts";
 
 const style = {
   position: "absolute",
@@ -95,7 +96,7 @@ export const MenuReact = () => {
     setShowAlertModal(false);
   };
   const addToCart = (product) => {
-    if (!localStorage.getItem("token")) {
+    if (!localStorage.getItem("accessToken")) {
       handleAlertModalOpen();
     } else {
       setCartItems((prevCartItems) => {
@@ -111,7 +112,7 @@ export const MenuReact = () => {
 
   const [likedProducts, setLikedProducts] = useState([]);
   const addLikedProduct = (product) => {
-    if (!localStorage.getItem("token")) {
+    if (!localStorage.getItem("accessToken")) {
       handleAlertModalOpen();
     } else {
       setLikedProducts((prevLikedProducts) => {
@@ -237,6 +238,7 @@ export const MenuReact = () => {
         <Button
           variant="contained"
           className="button-login"
+          style={{ backgroundColor: 'gray', color: 'white' }}
           onClick={() => {
             if(localStorage.getItem("accessToken")){
               const accessToken = localStorage.getItem("accessToken");
@@ -256,6 +258,15 @@ export const MenuReact = () => {
       </div>
       <div className="bienvenida">
         <h2>FullHouse Shoes</h2>
+      </div>
+      <div className="ListaDeProductos">
+      <img
+            style={{ maxWidth: '100%', height: 'auto' }}
+          />
+      <SliderProducts/>
+      </div>
+      <div className="bienvenida">
+        <h2>Novedades</h2>
       </div>
       <div className="flex1" id="flex1">
         <div className="slider-container">
@@ -306,13 +317,7 @@ export const MenuReact = () => {
             p: 4,
           }}
         >
-          <Alert
-            severity="warning"
-            icon={<span className="MuiAlert-icon">&#9888;</span>}
-          >
-            <AlertTitle>¡Alerta!</AlertTitle>
-            Debes iniciar sesión para continuar.
-          </Alert>
+          <div>Debes iniciar sesión para continuar</div>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
             <div className="button-container">
               <Button
@@ -323,14 +328,13 @@ export const MenuReact = () => {
               >
                 Volver
               </Button>
-              <Button onClick={handleLogin} variant="contained" color="primary">
+              <Button onClick={handleLogin} variant="contained" color="grey">
                 Iniciar sesión
               </Button>
             </div>
           </Box>
         </Box>
       </Modal>
-
       <div className="products1" id="products1">
         <Favorites favoritesItems={likedProducts} />
       </div>

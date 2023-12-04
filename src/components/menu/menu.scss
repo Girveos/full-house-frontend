@@ -11,8 +11,9 @@ body {
 
 .button-login {
   /*background-color: #082c4f;*/
-  background-color: rgb(0, 0, 0);
+  background-color: grey;
 }
+
 .bienvenida{
     display: flex;
     justify-content: center;
@@ -23,6 +24,11 @@ body {
       font-family: Arial, Helvetica, sans-serif;
       font-variant: all-petite-caps;
     }
+}
+.ListaDeProductos{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 200px;
 }
 .menu {
   display: flex;
